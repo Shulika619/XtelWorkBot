@@ -1,0 +1,34 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/xtel_work_tg
+    username: postgres
+    password: 1234
+    initialize: true
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+bot:
+  name: Xtel_Work_Bot
+  token: 6269024384:AAHL-tL2fumTLhkg2Zy8l-atecL2QDxPdtc
+#  owner: 5580936952
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+        jdbc: debug
+    root: info
+  file:
+    path: './var/log'
+    name: ${logging.file.path}/xtel-work.log
+  logback:
+    rollingpolicy:
+      total-size-cap: 200MB
