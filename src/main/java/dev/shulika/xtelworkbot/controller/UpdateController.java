@@ -4,8 +4,10 @@ import dev.shulika.xtelworkbot.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import static dev.shulika.xtelworkbot.BotConst.PROCESSED;
+import static dev.shulika.xtelworkbot.BotConst.UNSUPPORTED_MSG;
 
 @Component
 @Slf4j
@@ -20,7 +22,7 @@ public class UpdateController {
         } else if (update.hasMessage()) {
             switchMessagesByType(update);
         } else {
-            log.error("----- IN UpdateController :: processUpdate:: Unsupported message type is received: {} -----", update);
+            log.error("----- IN UpdateController :: processUpdate:: Unsupported message type is received - {} -----", update);
         }
     }
 
@@ -33,41 +35,33 @@ public class UpdateController {
         } else if (message.hasPhoto()) {
             processPhotoMessage(update);
         } else {
-            setUnsupportedMessageTypeView(update);
+            messageService.sendResponseWithMarkDownV2(update.getMessage(), UNSUPPORTED_MSG);
+            log.info("----- IN UpdateController :: UNSUPPORTED_MSG - {}", message);
         }
     }
 
-    private void setFileIsReceivedView(Update update) {
-//        var sendMessage = messageUtils.generateSendMessageWithText(update,
-//                "Файл получен! Обрабатывается...");
-//        setView(sendMessage);
+    private void processed(Update update) {
+        log.info("..... IN UpdateController :: processed Message .....");
+        messageService.sendResponseWithMarkDownV2(update.getMessage(), PROCESSED);
     }
 
-    public void setView(SendMessage sendMessage) {
-//        telegramBot.sendAnswerMessage(sendMessage);
+    private void processTextMessage(Update update) {
+        log.info("++++++ IN UpdateController :: processTextMessage :: TEXT");
+        messageService.sendResponseWithMarkDownV2(update.getMessage(), PROCESSED);
+//        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
     }
 
     private void processPhotoMessage(Update update) {
-        System.out.println("++++++ Photo");
+        log.info("++++++ IN UpdateController :: processPhotoMessage :: PHOTO :: Caption - {}", update.getMessage().getCaption());
+        // TODO: if change Photo+Caption -> error
+//        System.out.println(update.getMessage().getCaption());
 //        updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
 //        setFileIsReceivedView(update);
     }
 
     private void processDocMessage(Update update) {
-        System.out.println("++++++ Doc");
+        log.info("++++++ IN UpdateController :: processDocMessage :: DOC");
 //        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
 //        setFileIsReceivedView(update);
-    }
-
-    private void processTextMessage(Update update) {
-        log.info("++++++ IN UpdateController :: processTextMessage :: TEXT");
-        messageService.test1(update.getMessage());
-//        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
-    }
-
-    private void setUnsupportedMessageTypeView(Update update) {
-//        var sendMessage = messageUtils.generateSendMessageWithText(update,
-//                "Неподдерживаемый тип сообщения!");
-//        setView(sendMessage);
     }
 }

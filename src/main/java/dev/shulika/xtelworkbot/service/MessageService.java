@@ -4,6 +4,7 @@ import dev.shulika.xtelworkbot.controller.TgBot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -19,6 +20,22 @@ import java.util.ArrayList;
 public class MessageService {
     private final TgBot tgBot;
 
+    public void sendResponse(Message message, String sendText) {
+        var sendMessage = SendMessage.builder()
+                .text(sendText)
+                .chatId(message.getChatId())
+                .build();
+        execute(sendMessage);
+    }
+    public void sendResponseWithMarkDownV2(Message message, String sendText) {
+        var sendMessage = SendMessage.builder()
+                .text(sendText)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .chatId(message.getChatId())
+                .build();
+        execute(sendMessage);
+    }
+
     public void test1(Message message) {
         var sendMessage = SendMessage.builder()
                 .text("<b>Bold</b> " +
@@ -26,7 +43,7 @@ public class MessageService {
                       " <code>mono</code> " +
                       "<a href=\"google.com\">Google</a>")
                 .parseMode("HTML")
-                .chatId(String.valueOf(message.getChatId()))
+                .chatId(message.getChatId())
                 .build();
         execute(sendMessage);
     }
@@ -55,7 +72,7 @@ public class MessageService {
         markup.setOneTimeKeyboard(true);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText("Test");
-        sendMessage.setChatId(String.valueOf(message.getChatId()));
+        sendMessage.setChatId(message.getChatId());
         sendMessage.setReplyMarkup(markup);
         System.out.println("+++++++++ test2 Extcute now TODO");
         execute(sendMessage);
