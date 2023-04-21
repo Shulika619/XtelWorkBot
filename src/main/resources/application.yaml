@@ -14,9 +14,9 @@ spring:
     hibernate:
       ddl-auto: update
 
-bot:
-  name: Xtel_Work_Bot
-  token: 6269024384:AAHL-tL2fumTLhkg2Zy8l-atecL2QDxPdtc
+#bot:
+#  name: Xtel_Work_Bot
+#  token: 6269024384:AAHL-tL2fumTLhkg2Zy8l-atecL2QDxPdtc
 #  owner: 5580936952
 
 logging:
