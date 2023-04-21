@@ -12,15 +12,6 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class XtelWorkBotApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(XtelWorkBotApplication.class, args);
-
-        try {
-            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new TgBot());
-            log.info("+++++ IN XtelWorkBotApplication :: registerBot +++++");
-        } catch (TelegramApiException e) {
-            log.error("----- IN XtelWorkBotApplication :: registerBot FAIL -----");
-        }
     }
 }

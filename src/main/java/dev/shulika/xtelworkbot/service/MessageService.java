@@ -1,8 +1,6 @@
 package dev.shulika.xtelworkbot.service;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,7 +18,6 @@ public class MessageService {
     public MessageService(ExecuteMessageService executeMessageService) {
         this.executeMessageService = executeMessageService;
     }
-
 
     public void test1(Message message) {
         var ms1 = SendMessage.builder()
