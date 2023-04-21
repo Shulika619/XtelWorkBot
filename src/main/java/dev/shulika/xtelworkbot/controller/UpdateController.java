@@ -1,6 +1,7 @@
 package dev.shulika.xtelworkbot.controller;
 
-import dev.shulika.xtelworkbot.TgBot;
+import dev.shulika.xtelworkbot.service.MessageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,12 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class UpdateController {
-    private TgBot telegramBot;
-
-    public void registerBot(TgBot telegramBot) {
-        this.telegramBot = telegramBot;
-    }
+    private final MessageService messageService;
 
     public void processUpdate(Update update) {
         if (update == null) {
@@ -50,17 +48,20 @@ public class UpdateController {
     }
 
     private void processPhotoMessage(Update update) {
+        System.out.println("++++++ Photo");
 //        updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
 //        setFileIsReceivedView(update);
     }
 
     private void processDocMessage(Update update) {
+        System.out.println("++++++ Doc");
 //        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
 //        setFileIsReceivedView(update);
     }
 
     private void processTextMessage(Update update) {
-        System.out.println("++++++ TEXT");
+        log.info("++++++ IN UpdateController :: processTextMessage :: TEXT");
+        messageService.test1(update.getMessage());
 //        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
     }
 

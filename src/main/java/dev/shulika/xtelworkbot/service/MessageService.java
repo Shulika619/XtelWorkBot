@@ -1,5 +1,7 @@
 package dev.shulika.xtelworkbot.service;
 
+import dev.shulika.xtelworkbot.controller.TgBot;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -7,20 +9,18 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class MessageService {
-    private ExecuteMessageService executeMessageService;
-
-    public MessageService(ExecuteMessageService executeMessageService) {
-        this.executeMessageService = executeMessageService;
-    }
+    private final TgBot tgBot;
 
     public void test1(Message message) {
-        var ms1 = SendMessage.builder()
+        var sendMessage = SendMessage.builder()
                 .text("<b>Bold</b> " +
                       "<i>italic</i>" +
                       " <code>mono</code> " +
@@ -28,8 +28,7 @@ public class MessageService {
                 .parseMode("HTML")
                 .chatId(String.valueOf(message.getChatId()))
                 .build();
-
-        executeMessageService.execute(ms1);
+        execute(sendMessage);
     }
 
     public void test2(Message message) {
@@ -58,6 +57,16 @@ public class MessageService {
         sendMessage.setText("Test");
         sendMessage.setChatId(String.valueOf(message.getChatId()));
         sendMessage.setReplyMarkup(markup);
-        executeMessageService.execute(sendMessage);
+        System.out.println("+++++++++ test2 Extcute now TODO");
+        execute(sendMessage);
+    }
+
+    private void execute(SendMessage sendMessage) {
+        try {
+            tgBot.execute(sendMessage);
+            log.info("++++++ IN MessageService :: sendMessage executed :: chatId - {} :: text - {}", sendMessage.getChatId(), sendMessage.getText());
+        } catch (TelegramApiException e) {
+            log.error("----- IN MessageService :: sendMessage execute FAIL :: message - {}", e.getMessage());
+        }
     }
 }
