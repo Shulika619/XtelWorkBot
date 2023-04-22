@@ -1,6 +1,7 @@
 package dev.shulika.xtelworkbot.handler;
 
 import dev.shulika.xtelworkbot.service.MessageService;
+import dev.shulika.xtelworkbot.service.VisitorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @Slf4j
 public class MessageHandler {
     private final MessageService messageService;
+    private final VisitorService visitorService;
 
     public void switchMessagesByType(Update update) {
         var message = update.getMessage();
@@ -29,23 +31,24 @@ public class MessageHandler {
     }
 
     private void processTextMessage(Update update) {
-        log.info("++++++ IN MessageHandler :: processTextMessage :: TEXT");
+        log.info("+++++ IN MessageHandler :: processTextMessage :: TEXT");
         var message = update.getMessage();
         switch (message.getText()) {
+            case COMMAND_START -> visitorService.saveNewVisitor(message);
             case COMMAND_HELP -> messageService.sendResponseWithMarkDownV2(message, HELP_MSG);
+            case COMMAND_REGISTRATION -> messageService.sendResponseWithMarkDownV2(message, COMMAND_REGISTRATION);
             default -> messageService.sendResponseWithMarkDownV2(message, COMMAND_NOT_FOUND);
         }
-//        messageService.sendResponseWithMarkDownV2(update.getMessage(), PROCESSED);
     }
 
     private void processPhotoMessage(Update update) {
-        log.info("++++++ IN MessageHandler :: processPhotoMessage :: PHOTO :: Caption - {}", update.getMessage().getCaption());
+        log.info("+++++ IN MessageHandler :: processPhotoMessage :: PHOTO :: Caption - {}", update.getMessage().getCaption());
         // TODO: if change Photo+Caption -> error
 //        System.out.println(update.getMessage().getCaption());
     }
 
     private void processDocMessage(Update update) {
-        log.info("++++++ IN MessageHandler; :: processDocMessage :: DOC");
+        log.info("+++++ IN MessageHandler; :: processDocMessage :: DOC");
 //        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
     }
 }

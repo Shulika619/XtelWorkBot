@@ -7,15 +7,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-
-import static dev.shulika.xtelworkbot.BotConst.PROCESSED;
+import static dev.shulika.xtelworkbot.BotConst.PROCESSED_MSG;
 
 @Service
 @RequiredArgsConstructor
@@ -40,15 +34,15 @@ public class MessageService {
         execute(sendMessage);
     }
 
-    public void processed(Update update) {
-        log.info("..... IN MessageService :: processed Message .....");
-        sendResponseWithMarkDownV2(update.getMessage(), PROCESSED);
+    public void processed(Message message) {
+        sendResponseWithMarkDownV2(message, PROCESSED_MSG);
     }
 
     private void execute(SendMessage sendMessage) {
         try {
             tgBot.execute(sendMessage);
-            log.info("++++++ IN MessageService :: sendMessage executed :: chatId - {} :: text - {}", sendMessage.getChatId(), sendMessage.getText());
+            log.info("+++++ IN MessageService :: sendMessage executed :: chatId - {} :: text - {}",
+                    sendMessage.getChatId(), sendMessage.getText());
         } catch (TelegramApiException e) {
             log.error("----- IN MessageService :: sendMessage execute FAIL :: message - {}", e.getMessage());
         }
