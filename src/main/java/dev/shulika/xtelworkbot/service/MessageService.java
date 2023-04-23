@@ -160,7 +160,7 @@ public class MessageService {
 //                                Collections.singletonList(
 //                                        InlineKeyboardButton.builder()
 //                                                .text("Текст")
-//                                                .url("http://litopys.org.ua/shevchenko/shev139.htm")
+//                                                .url("http://google.com")
 //                                                .build()
 //                                )).build());
 //        messageSender.sendEditMessage(editMessageText);

@@ -20,17 +20,18 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @Slf4j
 public class RegistrationService {
     private final MessageService messageService;
+    private final AppUserService appUserService;
 
     public void regSwitch(Message message, RegStatus regStatus) {
         switch (regStatus) {
-            case START -> start(message);
+            case START_OR_CANCEL -> startOrCancel(message);
             case CANCEL -> cancel(message);
             case COMMON_PASS -> step1(message);
             default -> log.error("----- IN RegistrationService :: regSwitch" + COMMAND_NOT_FOUND);
         }
     }
 
-    private void start(Message message) {
+    private void startOrCancel(Message message) {
         log.info("+++++ IN RegistrationService :: start :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -54,10 +55,11 @@ public class RegistrationService {
 
     private void cancel(Message message) {
         messageService.sendEditMessage(message, REG_MSG_CANCEL);
+        appUserService.changeRegStatus(message, RegStatus.CANCEL);
     }
 
     private void step1(Message message) {
-        log.info("+++++ IN RegistrationService :: step1 :: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationService :: step1 - Enter COMMON_PASS :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -69,9 +71,9 @@ public class RegistrationService {
                                 .build()
                 ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
-
         messageService.sendEditInlineKeyboardMarkup(
                 message, REG_MSG_COMMON_PASS, inlineKeyboardMarkup);
+        appUserService.changeRegStatus(message, RegStatus.COMMON_PASS);
     }
 
 }

@@ -16,7 +16,6 @@ public class TgBot extends TelegramLongPollingBot {
     private String botName;
     @Value("${bot.token}")
     private String botToken;
-
     private MessageHandler messageHandler;
     private CallbackQueryHandler callbackQueryHandler;
 
@@ -28,10 +27,7 @@ public class TgBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update == null) {
-            log.error("----- IN TgBot :: onUpdateReceived:: Received update is null -----");
-            return;
-        } else if (update.hasMessage()) {
+        if (update.hasMessage()) {
             messageHandler.switchMessagesByType(update);
         } else if (update.hasCallbackQuery()) {
             callbackQueryHandler.switchCallbackQueryByType(update);

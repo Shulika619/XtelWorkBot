@@ -1,9 +1,9 @@
 package dev.shulika.xtelworkbot.handler;
 
 import dev.shulika.xtelworkbot.model.RegStatus;
+import dev.shulika.xtelworkbot.service.AppUserService;
 import dev.shulika.xtelworkbot.service.MessageService;
 import dev.shulika.xtelworkbot.service.RegistrationService;
-import dev.shulika.xtelworkbot.service.VisitorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @Slf4j
 public class MessageHandler {
     private final MessageService messageService;
-    private final VisitorService visitorService;
+    private final AppUserService appUserService;
     private final RegistrationService registrationService;
 
     public void switchMessagesByType(Update update) {
@@ -36,11 +36,20 @@ public class MessageHandler {
     private void processTextMessage(Update update) {
         log.info("+++++ IN MessageHandler :: processTextMessage :: TEXT");
         var message = update.getMessage();
-        switch (message.getText()) {
-            case COMMAND_START -> visitorService.saveNewVisitor(message);
-            case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
-            case COMMAND_REGISTRATION -> registrationService.regSwitch(message, RegStatus.START);
-            default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
+        var user = appUserService.findUserById(message.getChatId());
+        var regStatus = user.getRegStatus();
+
+        if (regStatus.equals(RegStatus.NONE) || regStatus.equals(RegStatus.CANCEL)) {
+            log.info("+++++ IN MessageHandler :: RegStatus NONE or CANCEL +++++");
+            switch (message.getText()) {
+                case COMMAND_START -> appUserService.saveNewAppUser(message);
+                case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
+                case COMMAND_REGISTRATION -> registrationService.regSwitch(message, RegStatus.START_OR_CANCEL);
+                default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
+            }
+        } else {
+            log.info("+++++ IN MessageHandler :: RegStatus - {} +++++", regStatus);
+
         }
     }
 
