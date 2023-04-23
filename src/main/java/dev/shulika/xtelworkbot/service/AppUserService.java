@@ -38,6 +38,7 @@ public class AppUserService {
                     .userName(message.getChat().getUserName())
                     .regStatus(RegStatus.NONE)
                     .role(Role.USER)
+                    .isActive(true)
                     .build();
             appUserRepository.save(appUser);
             log.info("IN AppUserService :: saveNewAppUser :: ChatId - {}, FirstName - {} :: Saved", chatId, firstName);

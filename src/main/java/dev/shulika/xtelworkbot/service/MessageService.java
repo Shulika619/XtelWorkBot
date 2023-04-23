@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -25,7 +26,7 @@ public class MessageService {
                 .parseMode(ParseMode.MARKDOWNV2)
                 .chatId(message.getChatId())
                 .build();
-        execute(sendMsg);
+        executeSendMsg(sendMsg);
     }
 
     public void sendEditMessage(Message message, String sendText) {
@@ -45,7 +46,7 @@ public class MessageService {
                 .chatId(message.getChatId())
                 .build();
         sendMsg.setReplyMarkup(inlineKeyboardMarkup);
-        execute(sendMsg);
+        executeSendMsg(sendMsg);
     }
 
     public void sendEditInlineKeyboardMarkup(Message message, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
@@ -59,11 +60,21 @@ public class MessageService {
         executeEditMsg(sendEditMsg);
     }
 
+    public void deleteMsg(Message message){
+        var delMsg = new DeleteMessage();
+        delMsg.setChatId(message.getChatId());
+        delMsg.setMessageId(message.getMessageId());
+        executeDeleteMsg(delMsg);
+    }
+
     public void processed(Message message) {
+        // TODO: remove if dont need
         sendMessage(message, PROCESSED_MSG);
     }
 
-    private void execute(SendMessage sendMessage) {
+
+    // TODO: refactoring all execute methods
+    private void executeSendMsg(SendMessage sendMessage) {
         try {
             tgBot.execute(sendMessage);
             log.info("+++++ IN MessageService :: sendMessage executed :: chatId - {} :: text - {}",
@@ -80,6 +91,16 @@ public class MessageService {
                     editMessageText.getChatId(), editMessageText.getText());
         } catch (TelegramApiException e) {
             log.error("----- IN MessageService :: sendEditMessage executeEditMsg FAIL :: message - {}", e.getMessage());
+        }
+    }
+
+    private void executeDeleteMsg(DeleteMessage deleteMessage) {
+        try {
+            tgBot.execute(deleteMessage);
+            log.info("+++++ IN MessageService :: executeDeleteMsg :: chatId - {} :: msgId - {}",
+                    deleteMessage.getChatId(), deleteMessage.getMessageId());
+        } catch (TelegramApiException e) {
+            log.error("----- IN MessageService :: executeDeleteMsg FAIL :: message - {}", e.getMessage());
         }
     }
 //    public void test1(Message message) {

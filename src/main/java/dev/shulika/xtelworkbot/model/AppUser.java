@@ -28,4 +28,5 @@ public class AppUser {
     private Role role;
     @CreationTimestamp
     private Timestamp registeredAt;
+    private boolean isActive;
 }

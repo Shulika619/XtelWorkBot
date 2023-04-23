@@ -23,7 +23,12 @@ help - Помощь
             """;
     public static final String REG_MSG_TITLE = "📝*_Регистрация сотрудника в системе оповещений_*📝\n";
     public static final String REG_MSG_CANCEL = "❌*_Регистрация отменена_*❌\n";
-    public static final String REG_MSG_COMMON_PASS = "🔑 1 Шаг: *Введите общий пароль* 🔑";
+    public static final String REG_MSG_COMMON_PASS = "🔑 *Введите общий пароль* 🔑";
+    public static final String REG_MSG_COMMON_PASS_FAIL = """
+                    🔑❌*_Неправильный общий пароль_*❌🔑\n
+                    *__Повторите ввод__* _или нажмите на кнопку_ *__Отмена__*\n
+                    """;
+    public static final String REG_MSG_SELECT_DEPARTMENT = "\uD83D\uDC47 *Выберите отдел/магазин* \uD83D\uDC47";
 
     // COMMANDS
     public static final String COMMAND_START = "/start";

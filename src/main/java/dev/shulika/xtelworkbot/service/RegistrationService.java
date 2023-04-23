@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static dev.shulika.xtelworkbot.BotConst.*;
@@ -26,13 +27,16 @@ public class RegistrationService {
         switch (regStatus) {
             case START_OR_CANCEL -> startOrCancel(message);
             case CANCEL -> cancel(message);
-            case COMMON_PASS -> step1(message);
+            case COMMON_PASS -> commonPassStep1(message);
+            case CHECK_COMMON_PASS -> checkCommonPassStep2(message);
+            case SELECT_DEPARTMENT -> selectDepartmentStep3(message);
+            case CHECK_SELECT_DEPARTMENT -> checkSelectDepartmentStep4(message);
             default -> log.error("----- IN RegistrationService :: regSwitch" + COMMAND_NOT_FOUND);
         }
     }
 
     private void startOrCancel(Message message) {
-        log.info("+++++ IN RegistrationService :: start :: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationService :: startOrCancel NOW:: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -58,13 +62,13 @@ public class RegistrationService {
         appUserService.changeRegStatus(message, RegStatus.CANCEL);
     }
 
-    private void step1(Message message) {
-        log.info("+++++ IN RegistrationService :: step1 - Enter COMMON_PASS :: ChatId - {}, FirstName - {}",
+    private void commonPassStep1(Message message) {
+        log.info("+++++ IN RegistrationService :: commonPassStep1 NOW:: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(
-                List.of(
+                Collections.singletonList(
                         InlineKeyboardButton.builder()
                                 .text(BTN_CANCEL)
                                 .callbackData(BTN_CANCEL_CALLBACK)
@@ -73,7 +77,60 @@ public class RegistrationService {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendEditInlineKeyboardMarkup(
                 message, REG_MSG_COMMON_PASS, inlineKeyboardMarkup);
-        appUserService.changeRegStatus(message, RegStatus.COMMON_PASS);
+        appUserService.changeRegStatus(message, RegStatus.CHECK_COMMON_PASS);
     }
 
+    private void checkCommonPassStep2(Message message) {
+        log.info("+++++ IN RegistrationService :: checkCommonPassStep2 NOW:: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+
+        if (message.getText().equals("1234")) {
+            log.info("+++++ IN RegistrationService :: checkCommonPassStep2 - OK :: ChatId - {}, FirstName - {}",
+                    message.getChatId(), message.getChat().getFirstName());
+            messageService.deleteMsg(message);
+            appUserService.changeRegStatus(message, RegStatus.SELECT_DEPARTMENT);
+            selectDepartmentStep3(message);
+        } else {
+            log.info("----- IN RegistrationService :: checkCommonPassStep2 - FAIL:: ChatId - {}, FirstName - {}",
+                    message.getChatId(), message.getChat().getFirstName());
+
+            messageService.deleteMsg(message);
+            messageService.sendMessage(message, REG_MSG_COMMON_PASS_FAIL);
+        }
+    }
+
+    private void selectDepartmentStep3(Message message) {
+        log.info("+++++ IN RegistrationService :: selectDepartmentStep3 NOW:: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(
+                List.of(
+                        InlineKeyboardButton.builder()
+                                .text("Маг1")
+                                .callbackData("mag1")
+                                .build(),
+                        InlineKeyboardButton.builder()
+                                .text("Маг2")
+                                .callbackData("mag2")
+                                .build()
+                ));
+        keyboard.add(
+                Collections.singletonList(
+                        InlineKeyboardButton.builder()
+                                .text(BTN_CANCEL)
+                                .callbackData(BTN_CANCEL_CALLBACK)
+                                .build()
+                ));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        messageService.sendInlineKeyboardMarkup(
+                message, REG_MSG_SELECT_DEPARTMENT, inlineKeyboardMarkup);
+
+//        appUserService.changeRegStatus(message, RegStatus.CHECK_SELECT_DEPARTMENT);
+    }
+
+    private void checkSelectDepartmentStep4(Message message) {
+        System.out.println("++++++++++++++++++++ checkSelectDepartmentStep4 ++++++++++++++++");
+    }
 }

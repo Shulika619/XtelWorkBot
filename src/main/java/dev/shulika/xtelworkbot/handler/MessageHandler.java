@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import static dev.shulika.xtelworkbot.BotConst.*;
+import static dev.shulika.xtelworkbot.model.RegStatus.*;
 
 @Component
 @RequiredArgsConstructor
@@ -34,13 +35,13 @@ public class MessageHandler {
     }
 
     private void processTextMessage(Update update) {
-        log.info("+++++ IN MessageHandler :: processTextMessage :: TEXT");
+        log.info("+++++ IN MessageHandler :: processTextMessage :: TEXT - {}", update.getMessage().getText());
         var message = update.getMessage();
         var user = appUserService.findUserById(message.getChatId());
-        var regStatus = user.getRegStatus();
 
-        if (regStatus.equals(RegStatus.NONE) || regStatus.equals(RegStatus.CANCEL)) {
-            log.info("+++++ IN MessageHandler :: RegStatus NONE or CANCEL +++++");
+        if (user == null || user.getRegStatus().equals(RegStatus.NONE) ||
+            user.getRegStatus().equals(RegStatus.CANCEL)) {
+            log.info("+++++ IN MessageHandler :: RegStatus NULL/NONE/CANCEL +++++");
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
                 case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
@@ -48,8 +49,16 @@ public class MessageHandler {
                 default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
             }
         } else {
-            log.info("+++++ IN MessageHandler :: RegStatus - {} +++++", regStatus);
-
+            var regStatus = user.getRegStatus();
+            log.info("+++++ IN MessageHandler :: RegStatus - {} NOW +++++", regStatus);
+            switch (regStatus){
+                case COMMON_PASS -> registrationService.regSwitch(message, COMMON_PASS);
+                case CHECK_COMMON_PASS -> registrationService.regSwitch(message, CHECK_COMMON_PASS);
+                case SELECT_DEPARTMENT -> registrationService.regSwitch(message, SELECT_DEPARTMENT);
+                case CHECK_SELECT_DEPARTMENT -> registrationService.regSwitch(message, CHECK_SELECT_DEPARTMENT);
+                case DEPARTMENT_PASS -> System.out.println("===== DEPARTMENT_PASS NOW");
+                default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
+            }
         }
     }
 

@@ -30,6 +30,7 @@ public class CallbackQueryHandler {
         switch (queryData) {
             case BTN_CANCEL_CALLBACK -> registrationService.regSwitch(message, RegStatus.CANCEL);
             case BTN_START_REG_CALLBACK -> registrationService.regSwitch(message, RegStatus.COMMON_PASS);
+            case "mag1" -> registrationService.regSwitch(message, RegStatus.CHECK_SELECT_DEPARTMENT);
         }
     }
 }
