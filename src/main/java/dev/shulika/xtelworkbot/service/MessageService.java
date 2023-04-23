@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static dev.shulika.xtelworkbot.BotConst.PROCESSED_MSG;
@@ -17,25 +19,48 @@ import static dev.shulika.xtelworkbot.BotConst.PROCESSED_MSG;
 public class MessageService {
     private final TgBot tgBot;
 
-    public void sendResponse(Message message, String sendText) {
-        var sendMessage = SendMessage.builder()
-                .text(sendText)
-                .chatId(message.getChatId())
-                .build();
-        execute(sendMessage);
-    }
-
-    public void sendResponseWithMarkDownV2(Message message, String sendText) {
-        var sendMessage = SendMessage.builder()
+    public void sendMessage(Message message, String sendText) {
+        var sendMsg = SendMessage.builder()
                 .text(sendText)
                 .parseMode(ParseMode.MARKDOWNV2)
                 .chatId(message.getChatId())
                 .build();
-        execute(sendMessage);
+        execute(sendMsg);
+    }
+
+    public void sendEditMessage(Message message, String sendText) {
+        var sendEditMsg = EditMessageText.builder()
+                .chatId(message.getChatId())
+                .messageId(message.getMessageId())
+                .text(sendText)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        executeEditMsg(sendEditMsg);
+    }
+
+    public void sendInlineKeyboardMarkup(Message message, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
+        var sendMsg = SendMessage.builder()
+                .text(sendText)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .chatId(message.getChatId())
+                .build();
+        sendMsg.setReplyMarkup(inlineKeyboardMarkup);
+        execute(sendMsg);
+    }
+
+    public void sendEditInlineKeyboardMarkup(Message message, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
+        var sendEditMsg = EditMessageText.builder()
+                .chatId(message.getChatId())
+                .messageId(message.getMessageId())
+                .text(sendText)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        sendEditMsg.setReplyMarkup(inlineKeyboardMarkup);
+        executeEditMsg(sendEditMsg);
     }
 
     public void processed(Message message) {
-        sendResponseWithMarkDownV2(message, PROCESSED_MSG);
+        sendMessage(message, PROCESSED_MSG);
     }
 
     private void execute(SendMessage sendMessage) {
@@ -45,6 +70,16 @@ public class MessageService {
                     sendMessage.getChatId(), sendMessage.getText());
         } catch (TelegramApiException e) {
             log.error("----- IN MessageService :: sendMessage execute FAIL :: message - {}", e.getMessage());
+        }
+    }
+
+    private void executeEditMsg(EditMessageText editMessageText) {
+        try {
+            tgBot.execute(editMessageText);
+            log.info("+++++ IN MessageService :: sendEditMessage executeEditMsg :: chatId - {} :: text - {}",
+                    editMessageText.getChatId(), editMessageText.getText());
+        } catch (TelegramApiException e) {
+            log.error("----- IN MessageService :: sendEditMessage executeEditMsg FAIL :: message - {}", e.getMessage());
         }
     }
 //    public void test1(Message message) {
@@ -88,4 +123,47 @@ public class MessageService {
 //        execute(sendMessage);
 //        System.out.println("+++++++++ test2 Extcute now TODO");
 //    }
+
+//    public void test3(Message message) {
+//        SendMessage sendMessage = new SendMessage();
+//        sendMessage.setChatId(message.getChatId());
+//        sendMessage.setText(REGISTRATION_MSG_TITLE);
+//
+//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+//        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+//        keyboard.add(
+//                List.of(
+//                        InlineKeyboardButton.builder()
+//                                .text("Text button btn1")
+//                                .callbackData("btn1")
+//                                .build(),
+//                        InlineKeyboardButton.builder()
+//                                .text("Text button btn2")
+//                                .callbackData("btn2")
+//                                .build()
+//                ));
+//        inlineKeyboardMarkup.setKeyboard(keyboard);
+//
+//        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+//        execute(sendMessage);
+//    }
+
+//    public void test4(Message message) {
+//        Integer messageId = callbackQuery.getMessage().getMessageId();
+//        var editMessageText = new EditMessageText();
+//        editMessageText.setChatId(String.valueOf(callbackQuery.getMessage().getChatId()));
+//        editMessageText.setMessageId(messageId);
+//        editMessageText.setText(poemText);
+//        editMessageText.setReplyMarkup(
+//                InlineKeyboardMarkup.builder()
+//                        .keyboardRow(
+//                                Collections.singletonList(
+//                                        InlineKeyboardButton.builder()
+//                                                .text("Текст")
+//                                                .url("http://litopys.org.ua/shevchenko/shev139.htm")
+//                                                .build()
+//                                )).build());
+//        messageSender.sendEditMessage(editMessageText);
+//    }
+
 }

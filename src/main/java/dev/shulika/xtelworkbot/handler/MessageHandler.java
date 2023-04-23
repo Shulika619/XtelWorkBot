@@ -1,6 +1,8 @@
 package dev.shulika.xtelworkbot.handler;
 
+import dev.shulika.xtelworkbot.model.RegStatus;
 import dev.shulika.xtelworkbot.service.MessageService;
+import dev.shulika.xtelworkbot.service.RegistrationService;
 import dev.shulika.xtelworkbot.service.VisitorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 public class MessageHandler {
     private final MessageService messageService;
     private final VisitorService visitorService;
+    private final RegistrationService registrationService;
 
     public void switchMessagesByType(Update update) {
         var message = update.getMessage();
@@ -25,7 +28,7 @@ public class MessageHandler {
         } else if (message.hasPhoto()) {
             processPhotoMessage(update);
         } else {
-            messageService.sendResponseWithMarkDownV2(update.getMessage(), UNSUPPORTED_MSG);
+            messageService.sendMessage(update.getMessage(), UNSUPPORTED_MSG);
             log.info("----- IN MessageHandler :: UNSUPPORTED_MSG - {}", message);
         }
     }
@@ -35,9 +38,9 @@ public class MessageHandler {
         var message = update.getMessage();
         switch (message.getText()) {
             case COMMAND_START -> visitorService.saveNewVisitor(message);
-            case COMMAND_HELP -> messageService.sendResponseWithMarkDownV2(message, HELP_MSG);
-            case COMMAND_REGISTRATION -> messageService.sendResponseWithMarkDownV2(message, COMMAND_REGISTRATION);
-            default -> messageService.sendResponseWithMarkDownV2(message, COMMAND_NOT_FOUND);
+            case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
+            case COMMAND_REGISTRATION -> registrationService.regSwitch(message, RegStatus.START);
+            default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
         }
     }
 

@@ -23,8 +23,8 @@ public class VisitorService {
     public void saveNewVisitor(Message message) {
         long chatId = message.getChatId();
         String firstName = message.getChat().getFirstName();
-        messageService.sendResponseWithMarkDownV2(message, HELLO_MSG + firstName);
-        messageService.sendResponseWithMarkDownV2(message, HELP_MSG);
+        messageService.sendMessage(message, HELLO_MSG + firstName);
+        messageService.sendMessage(message, HELP_MSG);
 
         if (visitorRepository.findById(chatId).isEmpty()) {
             Visitor visitor = Visitor.builder()
