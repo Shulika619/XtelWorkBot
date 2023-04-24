@@ -3,6 +3,7 @@ package dev.shulika.xtelworkbot.service;
 import dev.shulika.xtelworkbot.model.RegStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -20,6 +21,8 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @RequiredArgsConstructor
 @Slf4j
 public class RegistrationService {
+    @Value("${bot.common-pass}")
+    private String COMMON_PASS;
     private final MessageService messageService;
     private final AppUserService appUserService;
 
@@ -84,7 +87,7 @@ public class RegistrationService {
         log.info("+++++ IN RegistrationService :: checkCommonPassStep2 NOW:: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
 
-        if (message.getText().equals("1234")) {
+        if (message.getText().equals(COMMON_PASS)) {
             log.info("+++++ IN RegistrationService :: checkCommonPassStep2 - OK :: ChatId - {}, FirstName - {}",
                     message.getChatId(), message.getChat().getFirstName());
             messageService.deleteMsg(message);

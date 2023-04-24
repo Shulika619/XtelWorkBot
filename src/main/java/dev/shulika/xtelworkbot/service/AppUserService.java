@@ -33,9 +33,9 @@ public class AppUserService {
         if (appUserRepository.findById(chatId).isEmpty()) {
             AppUser appUser = AppUser.builder()
                     .id(chatId)
-                    .firstName(firstName)
-                    .lastName(message.getChat().getLastName())
-                    .userName(message.getChat().getUserName())
+                    .tgFirstName(firstName)
+                    .tgLastName(message.getChat().getLastName())
+                    .tgUserName(message.getChat().getUserName())
                     .regStatus(RegStatus.NONE)
                     .role(Role.USER)
                     .isActive(true)
