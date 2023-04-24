@@ -40,7 +40,7 @@ public class MessageHandler {
         var user = appUserService.findUserById(message.getChatId());
 
         if (user == null || user.getRegStatus().equals(RegStatus.NONE) ||
-            user.getRegStatus().equals(RegStatus.CANCEL)) {
+            user.getRegStatus().equals(RegStatus.CANCEL_REG)) {
             log.info("+++++ IN MessageHandler :: RegStatus NULL/NONE/CANCEL +++++");
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
@@ -54,9 +54,12 @@ public class MessageHandler {
             switch (regStatus){
                 case COMMON_PASS -> registrationService.regSwitch(message, COMMON_PASS);
                 case CHECK_COMMON_PASS -> registrationService.regSwitch(message, CHECK_COMMON_PASS);
+                case INPUT_FULL_NAME -> registrationService.regSwitch(message, INPUT_FULL_NAME);
+                case CHECK_INPUT_FULL_NAME -> registrationService.regSwitch(message, CHECK_INPUT_FULL_NAME);
                 case SELECT_DEPARTMENT -> registrationService.regSwitch(message, SELECT_DEPARTMENT);
                 case CHECK_SELECT_DEPARTMENT -> registrationService.regSwitch(message, CHECK_SELECT_DEPARTMENT);
-                case DEPARTMENT_PASS -> System.out.println("===== DEPARTMENT_PASS NOW");
+                case DEPARTMENT_PASS -> registrationService.regSwitch(message, DEPARTMENT_PASS);
+                case CHECK_DEPARTMENT_PASS -> registrationService.regSwitch(message, CHECK_DEPARTMENT_PASS);
                 default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
             }
         }

@@ -9,7 +9,7 @@ help - Помощь
 /send - Отправить рассылку (*только Админ)
 */
 
-    // MESSAGES
+    // MESSAGES ------------------------------------
     public static final String HELLO_MSG = "_Привет, _";
     public static final String PROCESSED_MSG = "_Обрабатывается \\.\\.\\._";
     public static final String UNSUPPORTED_MSG = "_Неподдерживаемый тип сообщения\\!_";
@@ -28,18 +28,24 @@ help - Помощь
                     🔑❌*_Неправильный общий пароль_*❌🔑\n
                     *__Повторите ввод__* _или нажмите на кнопку_ *__Отмена__*\n
                     """;
+    public static final String REG_MSG_INPUT_FULL_NAME = """
+                    ✏️*_Введите Фамилию Имя_*✏️\n
+                    _Например:_ *Пупкин Вова*\n
+                    """;
     public static final String REG_MSG_SELECT_DEPARTMENT = "\uD83D\uDC47 *Выберите отдел/магазин* \uD83D\uDC47";
 
-    // COMMANDS
+
+
+    // COMMANDS ---------------------------------------
     public static final String COMMAND_START = "/start";
     public static final String COMMAND_HELP = "/help";
     public static final String COMMAND_REGISTRATION = "/reg";
 //    public static final String COMMAND_ = "";
 
 
-    // BUTTONS
+    // BUTTONS -------------------------------------
     public static final String BTN_CANCEL = "Отмена";
-    public static final String BTN_CANCEL_CALLBACK = "cancel";
+    public static final String BTN_CANCEL_REG_CALLBACK = "cancel";
 
 
     public static final String BTN_START_REG = "Начать";

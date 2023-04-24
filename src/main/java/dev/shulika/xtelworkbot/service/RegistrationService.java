@@ -29,11 +29,13 @@ public class RegistrationService {
     public void regSwitch(Message message, RegStatus regStatus) {
         switch (regStatus) {
             case START_OR_CANCEL -> startOrCancel(message);
-            case CANCEL -> cancel(message);
+            case CANCEL_REG -> cancelReg(message);
             case COMMON_PASS -> commonPassStep1(message);
             case CHECK_COMMON_PASS -> checkCommonPassStep2(message);
-            case SELECT_DEPARTMENT -> selectDepartmentStep3(message);
-            case CHECK_SELECT_DEPARTMENT -> checkSelectDepartmentStep4(message);
+            case INPUT_FULL_NAME -> inputFullNameStep3(message);
+            case CHECK_INPUT_FULL_NAME -> checkInputFullNameStep4(message);
+            case SELECT_DEPARTMENT -> selectDepartmentStep5(message);
+            case CHECK_SELECT_DEPARTMENT -> checkSelectDepartmentStep6(message);
             default -> log.error("----- IN RegistrationService :: regSwitch" + COMMAND_NOT_FOUND);
         }
     }
@@ -47,7 +49,7 @@ public class RegistrationService {
                 List.of(
                         InlineKeyboardButton.builder()
                                 .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
+                                .callbackData(BTN_CANCEL_REG_CALLBACK)
                                 .build(),
                         InlineKeyboardButton.builder()
                                 .text(BTN_START_REG)
@@ -60,9 +62,9 @@ public class RegistrationService {
                 message, REG_MSG_TITLE, inlineKeyboardMarkup);
     }
 
-    private void cancel(Message message) {
+    private void cancelReg(Message message) {
         messageService.sendEditMessage(message, REG_MSG_CANCEL);
-        appUserService.changeRegStatus(message, RegStatus.CANCEL);
+        appUserService.changeState(message, RegStatus.CANCEL_REG);
     }
 
     private void commonPassStep1(Message message) {
@@ -74,13 +76,13 @@ public class RegistrationService {
                 Collections.singletonList(
                         InlineKeyboardButton.builder()
                                 .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
+                                .callbackData(BTN_CANCEL_REG_CALLBACK)
                                 .build()
                 ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendEditInlineKeyboardMarkup(
                 message, REG_MSG_COMMON_PASS, inlineKeyboardMarkup);
-        appUserService.changeRegStatus(message, RegStatus.CHECK_COMMON_PASS);
+        appUserService.changeState(message, RegStatus.CHECK_COMMON_PASS);
     }
 
     private void checkCommonPassStep2(Message message) {
@@ -91,8 +93,8 @@ public class RegistrationService {
             log.info("+++++ IN RegistrationService :: checkCommonPassStep2 - OK :: ChatId - {}, FirstName - {}",
                     message.getChatId(), message.getChat().getFirstName());
             messageService.deleteMsg(message);
-            appUserService.changeRegStatus(message, RegStatus.SELECT_DEPARTMENT);
-            selectDepartmentStep3(message);
+            appUserService.changeState(message, RegStatus.INPUT_FULL_NAME);
+            inputFullNameStep3(message);
         } else {
             log.info("----- IN RegistrationService :: checkCommonPassStep2 - FAIL:: ChatId - {}, FirstName - {}",
                     message.getChatId(), message.getChat().getFirstName());
@@ -102,8 +104,36 @@ public class RegistrationService {
         }
     }
 
-    private void selectDepartmentStep3(Message message) {
-        log.info("+++++ IN RegistrationService :: selectDepartmentStep3 NOW:: ChatId - {}, FirstName - {}",
+    private void inputFullNameStep3(Message message) {
+        log.info("+++++ IN RegistrationService :: inputFullNameStep3 NOW:: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(
+                Collections.singletonList(
+                        InlineKeyboardButton.builder()
+                                .text(BTN_CANCEL)
+                                .callbackData(BTN_CANCEL_REG_CALLBACK)
+                                .build()
+                ));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        messageService.sendInlineKeyboardMarkup(
+                message, REG_MSG_INPUT_FULL_NAME, inlineKeyboardMarkup);
+        appUserService.changeState(message, RegStatus.CHECK_INPUT_FULL_NAME);
+
+    }
+    private void checkInputFullNameStep4(Message message) {
+        log.info("+++++ IN RegistrationService :: checkInputFullNameStep4 NOW:: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        messageService.deleteMsg(message);
+        appUserService.setFullName(message);
+        appUserService.changeState(message, RegStatus.SELECT_DEPARTMENT);
+        selectDepartmentStep5(message);
+    }
+
+    private void selectDepartmentStep5(Message message) {
+        log.info("+++++ IN RegistrationService :: selectDepartmentStep5 NOW:: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -123,7 +153,7 @@ public class RegistrationService {
                 Collections.singletonList(
                         InlineKeyboardButton.builder()
                                 .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
+                                .callbackData(BTN_CANCEL_REG_CALLBACK)
                                 .build()
                 ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -133,7 +163,10 @@ public class RegistrationService {
 //        appUserService.changeRegStatus(message, RegStatus.CHECK_SELECT_DEPARTMENT);
     }
 
-    private void checkSelectDepartmentStep4(Message message) {
+    private void checkSelectDepartmentStep6(Message message) {
+        log.info("+++++ IN RegistrationService :: checkSelectDepartmentStep6 NOW:: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+
         System.out.println("++++++++++++++++++++ checkSelectDepartmentStep4 ++++++++++++++++");
     }
 }

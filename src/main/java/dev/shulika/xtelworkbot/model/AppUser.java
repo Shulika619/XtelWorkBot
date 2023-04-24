@@ -33,5 +33,5 @@ public class AppUser {
     private Timestamp createdAt;
     @UpdateTimestamp
     private Timestamp updatedAt;
-    private boolean isActive;
+    private boolean isRegistered;
 }

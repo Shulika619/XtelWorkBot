@@ -7,7 +7,6 @@ import dev.shulika.xtelworkbot.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -38,7 +37,7 @@ public class AppUserService {
                     .tgUserName(message.getChat().getUserName())
                     .regStatus(RegStatus.NONE)
                     .role(Role.USER)
-                    .isActive(true)
+                    .isRegistered(false)
                     .build();
             appUserRepository.save(appUser);
             log.info("IN AppUserService :: saveNewAppUser :: ChatId - {}, FirstName - {} :: Saved", chatId, firstName);
@@ -49,11 +48,20 @@ public class AppUserService {
         return appUserRepository.findById(chatId).orElse(null);
     }
 
-    public void changeRegStatus(Message message, RegStatus regStatus){
-        log.info("+++++ IN AppUserService :: changeRegStatus :: ChatId - {}, FirstName - {}, Status - {} :: Saved",
-                message.getChatId(), message.getChat().getFirstName(), regStatus);
+    public void changeState(Message message, RegStatus regStatus){
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         user.setRegStatus(regStatus);
+        log.info("+++++ IN AppUserService :: changeState :: ChatId - {}, FirstName - {}, Status - {} :: Saved",
+                message.getChatId(), message.getChat().getFirstName(), regStatus);
+    }
+
+    public void setFullName(Message message){
+        var user = appUserRepository.findById(message.getChatId())
+                .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
+        var newFullName = message.getText();
+        user.setFullName(newFullName);
+        log.info("+++++ IN AppUserService :: setFullName :: ChatId - {}, FirstName - {}, FullName - {} :: Saved",
+                message.getChatId(), message.getChat().getFirstName(), newFullName);
     }
 }
