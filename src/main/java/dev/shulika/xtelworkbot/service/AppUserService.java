@@ -1,7 +1,7 @@
 package dev.shulika.xtelworkbot.service;
 
 import dev.shulika.xtelworkbot.model.AppUser;
-import dev.shulika.xtelworkbot.model.RegStatus;
+import dev.shulika.xtelworkbot.model.State;
 import dev.shulika.xtelworkbot.model.Role;
 import dev.shulika.xtelworkbot.repository.AppUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class AppUserService {
                     .tgFirstName(firstName)
                     .tgLastName(message.getChat().getLastName())
                     .tgUserName(message.getChat().getUserName())
-                    .regStatus(RegStatus.NONE)
+                    .state(State.NONE)
                     .role(Role.USER)
                     .isRegistered(false)
                     .build();
@@ -48,12 +48,12 @@ public class AppUserService {
         return appUserRepository.findById(chatId).orElse(null);
     }
 
-    public void changeState(Message message, RegStatus regStatus){
+    public void changeState(Message message, State state){
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
-        user.setRegStatus(regStatus);
+        user.setState(state);
         log.info("+++++ IN AppUserService :: changeState :: ChatId - {}, FirstName - {}, Status - {} :: Saved",
-                message.getChatId(), message.getChat().getFirstName(), regStatus);
+                message.getChatId(), message.getChat().getFirstName(), state);
     }
 
     public void setFullName(Message message){
@@ -63,5 +63,13 @@ public class AppUserService {
         user.setFullName(newFullName);
         log.info("+++++ IN AppUserService :: setFullName :: ChatId - {}, FirstName - {}, FullName - {} :: Saved",
                 message.getChatId(), message.getChat().getFirstName(), newFullName);
+    }
+
+    public void setDepartmentId(Message message, int idDepartment){
+        var user = appUserRepository.findById(message.getChatId())
+                .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
+        user.setIdDepartment(idDepartment);
+        log.info("+++++ IN AppUserService :: setDepartmentId :: ChatId - {}, FirstName - {}, DepartmentId - {} :: Saved",
+                message.getChatId(), message.getChat().getFirstName(), idDepartment);
     }
 }

@@ -1,6 +1,6 @@
 package dev.shulika.xtelworkbot.handler;
 
-import dev.shulika.xtelworkbot.model.RegStatus;
+import dev.shulika.xtelworkbot.model.State;
 import dev.shulika.xtelworkbot.service.AppUserService;
 import dev.shulika.xtelworkbot.service.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -37,21 +37,21 @@ public class MessageHandler {
         var message = update.getMessage();
         var user = appUserService.findUserById(message.getChatId());
 
-        if (user == null || user.getRegStatus().equals(RegStatus.NONE) ||
-            user.getRegStatus().equals(RegStatus.CANCEL)) {
-            log.info("+++++ IN MessageHandler :: RegStatus NULL/NONE/CANCEL +++++");
+        if (user == null || user.getState().equals(State.NONE) ||
+            user.getState().equals(State.CANCEL)) {
+            log.info("+++++ IN MessageHandler :: STATE NULL/NONE/CANCEL +++++");
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
                 case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
-                case COMMAND_REGISTRATION -> registrationHandler.regSwitch(message, RegStatus.START_OR_CANCEL_REG);
+                case COMMAND_REGISTRATION -> registrationHandler.regSwitch(message, State.START_OR_CANCEL_REG);
                 default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
             }
         } else {
-            var regStatus = user.getRegStatus();
-            log.info("+++++ IN MessageHandler :: RegStatus - {} NOW +++++", regStatus);
-            registrationHandler.regSwitch(message, regStatus);
+            var state = user.getState();
+            log.info("+++++ IN MessageHandler :: STATE - {} NOW +++++", state);
+            registrationHandler.regSwitch(message, state);
 //            // TODO: delete switch if dont need and send to ResitrationService switch
-//            switch (regStatus){
+//            switch (state){
 //                case COMMON_PASS -> registrationHandler.regSwitch(message, COMMON_PASS);
 //                case CHECK_COMMON_PASS -> registrationHandler.regSwitch(message, CHECK_COMMON_PASS);
 //                case INPUT_FULL_NAME -> registrationHandler.regSwitch(message, INPUT_FULL_NAME);

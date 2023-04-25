@@ -26,7 +26,7 @@ public class AppUser {
     private String tgUserName;
     private String tgPhone;
     @Enumerated(EnumType.STRING)
-    private RegStatus regStatus;
+    private State state;
     @Enumerated(EnumType.STRING)
     private Role role;
     @CreationTimestamp

@@ -1,6 +1,6 @@
 package dev.shulika.xtelworkbot.model;
 
-public enum RegStatus {
+public enum State {
     NONE,
     CANCEL,
     START_OR_CANCEL_REG,
