@@ -43,7 +43,7 @@ help - Помощь
 //    public static final String COMMAND_ = "";
 
 
-    // BUTTONS -------------------------------------
+    // BUTTONS AND CALLBACK -----------------------------------
     public static final String BTN_CANCEL = "Отмена";
     public static final String BTN_CANCEL_REG_CALLBACK = "cancel";
 

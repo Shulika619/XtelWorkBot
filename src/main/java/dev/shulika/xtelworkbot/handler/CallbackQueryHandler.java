@@ -2,7 +2,6 @@ package dev.shulika.xtelworkbot.handler;
 
 import dev.shulika.xtelworkbot.model.RegStatus;
 import dev.shulika.xtelworkbot.service.MessageService;
-import dev.shulika.xtelworkbot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,7 @@ import static dev.shulika.xtelworkbot.BotConst.BTN_START_REG_CALLBACK;
 @Slf4j
 public class CallbackQueryHandler {
     private final MessageService messageService;
-    private final RegistrationService registrationService;
+    private final RegistrationHandler registrationHandler;
 
     public void switchCallbackQueryByType(Update update) {
         var query = update.getCallbackQuery();
@@ -28,9 +27,9 @@ public class CallbackQueryHandler {
 //        var firstName = query.getFrom().getFirstName();
 
         switch (queryData) {
-            case BTN_CANCEL_REG_CALLBACK -> registrationService.regSwitch(message, RegStatus.CANCEL_REG);
-            case BTN_START_REG_CALLBACK -> registrationService.regSwitch(message, RegStatus.COMMON_PASS);
-            case "mag1" -> registrationService.regSwitch(message, RegStatus.CHECK_SELECT_DEPARTMENT);
+            case BTN_CANCEL_REG_CALLBACK -> registrationHandler.regSwitch(message, RegStatus.CANCEL);
+            case BTN_START_REG_CALLBACK -> registrationHandler.regSwitch(message, RegStatus.COMMON_PASS);
+            case "mag1" -> registrationHandler.regSwitch(message, RegStatus.CHECK_SELECT_DEPARTMENT);
         }
     }
 }
