@@ -19,12 +19,9 @@ import java.sql.Timestamp;
 public class AppUser {
     @Id
     private Long id;
-    private String fullName;
     private Integer idDepartment;
+    private String fullName;
     private String tgFirstName;
-    private String tgLastName;
-    private String tgUserName;
-    private String tgPhone;
     @Enumerated(EnumType.STRING)
     private State state;
     @Enumerated(EnumType.STRING)
@@ -33,5 +30,9 @@ public class AppUser {
     private Timestamp createdAt;
     @UpdateTimestamp
     private Timestamp updatedAt;
-    private boolean isRegistered;
+
+//    private String tgLastName;
+//    private String tgUserName;
+//    private String tgPhone;
+//    private boolean isRegistered;
 }

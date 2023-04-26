@@ -41,8 +41,16 @@ public class RegistrationHandler {
             case CHECK_INPUT_FULL_NAME -> checkInputFullNameStep4(message);
             case SELECT_DEPARTMENT -> selectDepartmentStep5(message);
 //            case CHECK_SELECT_DEPARTMENT -> checkSelectDepartmentStep6(message);
+            case CHECK_DEPARTMENT_PASS -> checkDepartmentPass7(message);
             default -> log.error("----- IN RegistrationHandler :: regSwitch - " + COMMAND_NOT_FOUND);
         }
+    }
+
+    private InlineKeyboardButton createCancelButton() {
+        return InlineKeyboardButton.builder()
+                .text(BTN_CANCEL)
+                .callbackData(BTN_CANCEL_CALLBACK)
+                .build();
     }
 
     private void startOrCancel(Message message) {
@@ -50,19 +58,14 @@ public class RegistrationHandler {
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(
-                List.of(
-                        InlineKeyboardButton.builder()
-                                .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
-                                .build(),
-                        InlineKeyboardButton.builder()
-                                .text(BTN_START_REG)
-                                .callbackData(BTN_START_REG_CALLBACK)
-                                .build()
-                ));
+        keyboard.add(List.of(
+                createCancelButton(),
+                InlineKeyboardButton.builder()
+                        .text(BTN_START_REG)
+                        .callbackData(BTN_START_REG_CALLBACK)
+                        .build()
+        ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
-
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_TITLE, inlineKeyboardMarkup);
     }
@@ -73,17 +76,11 @@ public class RegistrationHandler {
     }
 
     private void commonPassStep1(Message message) {
-        log.info("+++++ IN RegistrationHandler :: commonPassStep1 NOW:: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationHandler :: commonPassStep1 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(
-                Collections.singletonList(
-                        InlineKeyboardButton.builder()
-                                .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
-                                .build()
-                ));
+        keyboard.add(Collections.singletonList(createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendEditInlineKeyboardMarkup(
                 message, REG_MSG_COMMON_PASS, inlineKeyboardMarkup);
@@ -91,9 +88,8 @@ public class RegistrationHandler {
     }
 
     private void checkCommonPassStep2(Message message) {
-        log.info("+++++ IN RegistrationHandler :: checkCommonPassStep2 NOW:: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationHandler :: checkCommonPassStep2 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
-
         if (message.getText().equals(COMMON_PASS)) {
             log.info("+++++ IN RegistrationHandler :: checkCommonPassStep2 - OK :: ChatId - {}, FirstName - {}",
                     message.getChatId(), message.getChat().getFirstName());
@@ -101,36 +97,27 @@ public class RegistrationHandler {
             appUserService.changeState(message, State.INPUT_FULL_NAME);
             inputFullNameStep3(message);
         } else {
-            log.info("----- IN RegistrationHandler :: checkCommonPassStep2 - FAIL:: ChatId - {}, FirstName - {}",
+            log.error("----- IN RegistrationHandler :: checkCommonPassStep2 - FAIL :: ChatId - {}, FirstName - {}",
                     message.getChatId(), message.getChat().getFirstName());
-
             messageService.deleteMsg(message);
             messageService.sendMessage(message, REG_MSG_COMMON_PASS_FAIL);
         }
     }
 
     private void inputFullNameStep3(Message message) {
-        log.info("+++++ IN RegistrationHandler :: inputFullNameStep3 NOW:: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationHandler :: inputFullNameStep3 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(
-                Collections.singletonList(
-                        InlineKeyboardButton.builder()
-                                .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
-                                .build()
-                ));
+        keyboard.add(Collections.singletonList(createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_INPUT_FULL_NAME, inlineKeyboardMarkup);
         appUserService.changeState(message, State.CHECK_INPUT_FULL_NAME);
-
     }
 
     private void checkInputFullNameStep4(Message message) {
-        log.info("+++++ IN RegistrationHandler :: checkInputFullNameStep4 NOW:: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationHandler :: checkInputFullNameStep4 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         messageService.deleteMsg(message);
         appUserService.setFullName(message);
@@ -139,42 +126,59 @@ public class RegistrationHandler {
     }
 
     private void selectDepartmentStep5(Message message) {
-        log.info("+++++ IN RegistrationHandler :: selectDepartmentStep5 NOW:: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationHandler :: selectDepartmentStep5 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departments = departmentService.findALL();
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-
         for (Department department : departments) {
-            keyboard.add(
-                    List.of(
-                            InlineKeyboardButton.builder()
-                                    .text(department.getName())
-                                    .callbackData("DEPARTMENT:" + department.getId())
-                                    .build()
-                    ));
+            keyboard.add(List.of(
+                    InlineKeyboardButton.builder()
+                            .text(department.getName())
+                            .callbackData("DEPARTMENT:" + department.getId())
+                            .build()
+            ));
         }
-        keyboard.add(
-                Collections.singletonList(
-                        InlineKeyboardButton.builder()
-                                .text(BTN_CANCEL)
-                                .callbackData(BTN_CANCEL_CALLBACK)
-                                .build()
-                ));
+        keyboard.add(Collections.singletonList(createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_SELECT_DEPARTMENT, inlineKeyboardMarkup);
-
         appUserService.changeState(message, State.CHECK_SELECT_DEPARTMENT);
     }
 
     public void checkSelectDepartmentStep6(Message message, String value) {
-        log.info("+++++ IN RegistrationHandler :: checkSelectDepartmentStep6 NOW:: ChatId - {}, FirstName - {}",
+        log.info("+++++ IN RegistrationHandler :: checkSelectDepartmentStep6 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(Collections.singletonList(createCancelButton()));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        appUserService.setDepartmentId(message, Integer.parseInt(value));
+        appUserService.changeState(message, State.CHECK_DEPARTMENT_PASS);
+        messageService.sendEditInlineKeyboardMarkup(message, REG_MSG_DEPARTMENT_PASS, inlineKeyboardMarkup);
+    }
 
-        appUserService.setDepartmentId(message,Integer.parseInt(value));
-        appUserService.changeState(message, State.DEPARTMENT_PASS);
-        messageService.sendEditMessage(message, REG_MSG_DEPARTMENT_PASS);
+    private void checkDepartmentPass7(Message message) {
+        log.info("+++++ IN RegistrationHandler :: checkDepartmentPass7 NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        if (appUserService.isDepartmentPassCorrect(message)) {
+            log.info("+++++ IN RegistrationHandler :: checkDepartmentPass7 - OK :: ChatId - {}, FirstName - {}",
+                    message.getChatId(), message.getChat().getFirstName());
+            messageService.deleteMsg(message);
+            finishRegistration(message);
+        } else {
+            log.error("----- IN RegistrationHandler :: checkDepartmentPass7 - FAIL :: ChatId - {}, FirstName - {}",
+                    message.getChatId(), message.getChat().getFirstName());
+            messageService.deleteMsg(message);
+            messageService.sendMessage(message, REG_MSG_DEPARTMENT_PASS_FAIL);
+        }
+    }
+
+    private void finishRegistration(Message message) {
+        log.info("+++++ IN RegistrationHandler :: finishRegistration NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        appUserService.saveEmployee(message);
+        appUserService.changeState(message, State.NONE);
+        messageService.sendMessage(message, REG_MSG_REG_COMPLETE);
     }
 }
