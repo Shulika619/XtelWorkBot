@@ -34,7 +34,6 @@ public class RegistrationHandler {
     public void regSwitch(Message message, State state) {
         switch (state) {
             case START_OR_CANCEL_REG -> startOrCancel(message);
-            case CANCEL -> cancelReg(message);
             case COMMON_PASS -> commonPassStep1(message);
             case CHECK_COMMON_PASS -> checkCommonPassStep2(message);
             case INPUT_FULL_NAME -> inputFullNameStep3(message);
@@ -68,11 +67,6 @@ public class RegistrationHandler {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_TITLE, inlineKeyboardMarkup);
-    }
-
-    private void cancelReg(Message message) {
-        messageService.sendEditMessage(message, MSG_CANCEL);
-        appUserService.changeState(message, State.CANCEL);
     }
 
     private void commonPassStep1(Message message) {

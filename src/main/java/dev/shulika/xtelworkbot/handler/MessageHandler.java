@@ -37,8 +37,10 @@ public class MessageHandler {
         var message = update.getMessage();
         var user = appUserService.findUserById(message.getChatId());
 
-        if (user == null || user.getState().equals(State.NONE) ||
-            user.getState().equals(State.CANCEL)) {
+        if (message.getText().equals(COMMAND_CANCEL)) {
+            appUserService.cancelCommand(message);
+        } else if (user == null || user.getState().equals(State.NONE) ||
+                   user.getState().equals(State.CANCEL)) {
             log.info("+++++ IN MessageHandler :: STATE NULL/NONE/CANCEL +++++");
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
@@ -50,18 +52,6 @@ public class MessageHandler {
             var state = user.getState();
             log.info("+++++ IN MessageHandler :: STATE - {} NOW +++++", state);
             registrationHandler.regSwitch(message, state);
-//            // TODO: delete switch if dont need and send to ResitrationService switch
-//            switch (state){
-//                case COMMON_PASS -> registrationHandler.regSwitch(message, COMMON_PASS);
-//                case CHECK_COMMON_PASS -> registrationHandler.regSwitch(message, CHECK_COMMON_PASS);
-//                case INPUT_FULL_NAME -> registrationHandler.regSwitch(message, INPUT_FULL_NAME);
-//                case CHECK_INPUT_FULL_NAME -> registrationHandler.regSwitch(message, CHECK_INPUT_FULL_NAME);
-//                case SELECT_DEPARTMENT -> registrationHandler.regSwitch(message, SELECT_DEPARTMENT);
-//                case CHECK_SELECT_DEPARTMENT -> registrationHandler.regSwitch(message, CHECK_SELECT_DEPARTMENT);
-//                case DEPARTMENT_PASS -> registrationHandler.regSwitch(message, DEPARTMENT_PASS);
-//                case CHECK_DEPARTMENT_PASS -> registrationHandler.regSwitch(message, CHECK_DEPARTMENT_PASS);
-//                default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
-//            }
         }
     }
 

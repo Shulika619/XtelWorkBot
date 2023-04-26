@@ -5,7 +5,6 @@ import dev.shulika.xtelworkbot.model.Role;
 import dev.shulika.xtelworkbot.model.State;
 import dev.shulika.xtelworkbot.repository.AppUserRepository;
 import dev.shulika.xtelworkbot.repository.DepartmentRepository;
-import dev.shulika.xtelworkbot.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,8 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import javax.ws.rs.NotFoundException;
 
-import static dev.shulika.xtelworkbot.BotConst.HELLO_MSG;
-import static dev.shulika.xtelworkbot.BotConst.HELP_MSG;
+import static dev.shulika.xtelworkbot.BotConst.*;
 
 @Service
 @Transactional
@@ -40,11 +38,20 @@ public class AppUserService {
                     .role(Role.USER)
                     .build();
             appUserRepository.save(appUser);
-            log.info("IN AppUserService :: saveNewAppUser :: ChatId - {}, FirstName - {} :: Saved", chatId, firstName);
+            log.info("+++++ IN AppUserService :: saveNewAppUser :: ChatId - {}, FirstName - {} :: Saved", chatId, firstName);
         }
     }
 
+    public void cancelCommand(Message message) {
+        log.info("----- IN AppUserService :: cancelCommand :: ChatId - {}, FirstName - {} -----",
+                message.getChatId(), message.getChat().getFirstName());
+//        messageService.sendEditMessage(message, MSG_CANCEL);
+        messageService.sendMessage(message, MSG_CANCEL);
+        changeState(message, State.CANCEL);
+    }
+
     public AppUser findUserById(long chatId) {
+        log.info("+++++ IN AppUserService :: findUserById :: CHECK ChatId - {}", chatId);
         return appUserRepository.findById(chatId).orElse(null);
     }
 
@@ -73,7 +80,7 @@ public class AppUserService {
                 message.getChatId(), message.getChat().getFirstName(), idDepartment);
     }
 
-    public boolean isDepartmentPassCorrect(Message message){
+    public boolean isDepartmentPassCorrect(Message message) {
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         var selectedDepartment = user.getIdDepartment();
@@ -82,7 +89,7 @@ public class AppUserService {
         return department.getPassword().equals(message.getText());
     }
 
-    public void saveEmployee(Message message){
+    public void saveEmployee(Message message) {
         log.info("+++++ IN AppUserService :: saveEmployee :: ChatId - {}, FirstName - {} :: START",
                 message.getChatId(), message.getChat().getFirstName());
         var user = appUserRepository.findById(message.getChatId())
