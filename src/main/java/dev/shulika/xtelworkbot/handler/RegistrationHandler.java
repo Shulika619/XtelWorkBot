@@ -178,7 +178,7 @@ public class RegistrationHandler {
         log.info("+++++ IN RegistrationHandler :: finishRegistration NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         appUserService.saveEmployee(message);
-        appUserService.changeState(message, State.NONE);
         messageService.sendMessage(message, REG_MSG_REG_COMPLETE);
+        appUserService.changeState(message, State.NONE);
     }
 }

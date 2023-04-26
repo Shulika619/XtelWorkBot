@@ -5,6 +5,7 @@ import dev.shulika.xtelworkbot.model.Role;
 import dev.shulika.xtelworkbot.model.State;
 import dev.shulika.xtelworkbot.repository.AppUserRepository;
 import dev.shulika.xtelworkbot.repository.DepartmentRepository;
+import dev.shulika.xtelworkbot.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,10 @@ public class AppUserService {
     private final MessageService messageService;
     private final AppUserRepository appUserRepository;
     private final DepartmentRepository departmentRepository;
+    private final EmployeeService employeeService;
 
     public void saveNewAppUser(Message message) {
-        long chatId = message.getChatId();
+        var chatId = message.getChatId();
         String firstName = message.getChat().getFirstName();
         messageService.sendMessage(message, String.format("%s, %s\\! \n\n %s", HELLO_MSG, firstName, HELP_MSG));
 
@@ -63,7 +65,7 @@ public class AppUserService {
                 message.getChatId(), message.getChat().getFirstName(), newFullName);
     }
 
-    public void setDepartmentId(Message message, int idDepartment) {
+    public void setDepartmentId(Message message, long idDepartment) {
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         user.setIdDepartment(idDepartment);
@@ -83,6 +85,8 @@ public class AppUserService {
     public void saveEmployee(Message message){
         log.info("+++++ IN AppUserService :: saveEmployee :: ChatId - {}, FirstName - {} :: START",
                 message.getChatId(), message.getChat().getFirstName());
-
+        var user = appUserRepository.findById(message.getChatId())
+                .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
+        employeeService.saveFromAppUser(user);
     }
 }

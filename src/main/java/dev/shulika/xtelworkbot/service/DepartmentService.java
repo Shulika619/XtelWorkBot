@@ -24,7 +24,7 @@ public class DepartmentService {
         return departmentRepository.findAll();
     }
 
-    public Optional<Department> findById(Integer id) {
+    public Optional<Department> findById(long id) {
         log.info("+++++ IN DepartmentService :: findById :: ID - {}", id);
         return departmentRepository.findById(id);
     }
