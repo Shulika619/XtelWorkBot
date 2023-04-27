@@ -17,15 +17,34 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public void saveFromAppUser(AppUser appUser){
-        log.info("+++++ IN EmployeeService :: saveFromAppUser :: START +++++");
-        var employee = Employee.builder()
-                .id(appUser.getId())
-                .idDepartment(appUser.getIdDepartment())
-                .fullName(appUser.getFullName())
-                .tgFirstName(appUser.getTgFirstName())
-                .role(appUser.getRole())
-                .build();
-        employeeRepository.save(employee);
-        log.info("+++++ IN EmployeeService :: saveFromAppUser :: COMPLETE +++++");
+        log.info("+++++ IN EmployeeService :: saveFromAppUser :: ChatId = {}, FullName - {} :: START",
+                appUser.getId(), appUser.getFullName());
+        var checkEmployee = employeeRepository.findById(appUser.getId());
+        if (checkEmployee.isPresent()){
+            var employee = checkEmployee.get();
+            editEmployee(employee, appUser);
+        } else {
+            var newEmployee = Employee.builder()
+                    .id(appUser.getId())
+                    .idDepartment(appUser.getIdDepartment())
+                    .fullName(appUser.getFullName())
+                    .tgFirstName(appUser.getTgFirstName())
+                    .role(appUser.getRole())
+                    .build();
+            employeeRepository.save(newEmployee);
+            log.info("+++++ IN EmployeeService :: saveFromAppUser :: ChatId = {}, FullName - {} :: COMPLETE",
+                    appUser.getId(), appUser.getFullName());
+        }
+    }
+
+    private void editEmployee(Employee employee, AppUser appUser){
+        log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: START",
+                appUser.getId(), appUser.getFullName());
+        employee.setIdDepartment(appUser.getIdDepartment());
+        employee.setFullName(appUser.getFullName());
+        employee.setTgFirstName(appUser.getTgFirstName());
+        employee.setRole(appUser.getRole());
+        log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: COMPLETE",
+                appUser.getId(), appUser.getFullName());
     }
 }

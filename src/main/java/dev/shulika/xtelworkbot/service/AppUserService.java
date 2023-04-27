@@ -80,14 +80,28 @@ public class AppUserService {
                 message.getChatId(), message.getChat().getFirstName(), idDepartment);
     }
 
+    private void setRole(AppUser appUser, Role role){
+        log.info("+++++ IN AppUserService :: setRole :: ChatId - {}, Role - {}:: START +++++", appUser.getId(), role);
+        appUser.setRole(role);
+    }
+
     public boolean isDepartmentPassCorrect(Message message) {
+        log.info("+++++ IN AppUserService :: isDepartmentPassCorrect :: START +++++");
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
-        var selectedDepartment = user.getIdDepartment();
-        var department = departmentRepository.findById(selectedDepartment)
+        var selectedDepartmentId = user.getIdDepartment();
+        var department = departmentRepository.findById(selectedDepartmentId)
                 .orElseThrow(() -> new NotFoundException("----- Department Not found-----"));
+        if (department.getName().equals(Role.BOSS.toString())){
+            setRole(user,Role.BOSS);
+        } else {
+            System.out.println("=================== " + department.getName());
+            setRole(user,Role.MANAGER);
+        }
         return department.getPassword().equals(message.getText());
     }
+
+
 
     public void saveEmployee(Message message) {
         log.info("+++++ IN AppUserService :: saveEmployee :: ChatId - {}, FirstName - {} :: START",

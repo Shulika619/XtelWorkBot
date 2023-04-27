@@ -168,6 +168,8 @@ public class RegistrationHandler {
         }
     }
 
+    // TODO: select ROLE
+
     private void finishRegistration(Message message) {
         log.info("+++++ IN RegistrationHandler :: finishRegistration NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
