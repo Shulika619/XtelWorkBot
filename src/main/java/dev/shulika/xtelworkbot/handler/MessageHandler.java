@@ -2,6 +2,7 @@ package dev.shulika.xtelworkbot.handler;
 
 import dev.shulika.xtelworkbot.model.State;
 import dev.shulika.xtelworkbot.service.AppUserService;
+import dev.shulika.xtelworkbot.service.EmployeeService;
 import dev.shulika.xtelworkbot.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ public class MessageHandler {
     private final MessageService messageService;
     private final AppUserService appUserService;
     private final RegistrationHandler registrationHandler;
+    private final EmployeeService employeeService;
 
     public void switchMessagesByType(Update update) {
         var message = update.getMessage();
@@ -44,8 +46,9 @@ public class MessageHandler {
             log.info("+++++ IN MessageHandler :: STATE NULL/NONE/CANCEL +++++");
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
-                case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
                 case COMMAND_REGISTRATION -> registrationHandler.regSwitch(message, State.START_OR_CANCEL_REG);
+                case COMMAND_PROFILE -> employeeService.showEmployeeInfo(message);
+                case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
                 default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
             }
         } else {

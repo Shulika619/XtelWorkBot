@@ -35,7 +35,7 @@ public class AppUserService {
                     .id(chatId)
                     .tgFirstName(firstName)
                     .state(State.NONE)
-                    .role(Role.USER)
+                    .role(Role.GUEST)
                     .build();
             appUserRepository.save(appUser);
             log.info("+++++ IN AppUserService :: saveNewAppUser :: ChatId - {}, FirstName - {} :: Saved", chatId, firstName);
@@ -96,7 +96,7 @@ public class AppUserService {
             setRole(user,Role.BOSS);
         } else {
             System.out.println("=================== " + department.getName());
-            setRole(user,Role.MANAGER);
+            setRole(user,Role.USER);
         }
         return department.getPassword().equals(message.getText());
     }
