@@ -46,7 +46,7 @@ help - Помощь
                     """;
     public static final String REG_MSG_REG_COMPLETE = "✅ *Регистрация прошла успешно* ✅\n";
     public static final String PROFILE_MSG = "ℹ️ *Профиль пользователя* ℹ️\n\n";
-    public static final String PROFILE_NOT_FOUND = "❌ *Профиль не найден* ❌\n/reg \\- __Регистрация сотрудника__";
+    public static final String PROFILE_NOT_FOUND = "❌ *Профиль не найден* ❌\n\n/reg \\- __Регистрация сотрудника__";
 
 
     // COMMANDS ---------------------------------------

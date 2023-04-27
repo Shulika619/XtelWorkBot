@@ -2,6 +2,7 @@ package dev.shulika.xtelworkbot.service;
 
 import dev.shulika.xtelworkbot.BotConst;
 import dev.shulika.xtelworkbot.model.AppUser;
+import dev.shulika.xtelworkbot.model.Department;
 import dev.shulika.xtelworkbot.model.Employee;
 import dev.shulika.xtelworkbot.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +25,19 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final MessageService messageService;
 
-    public void saveFromAppUser(AppUser appUser){
+    public void saveFromAppUser(AppUser appUser) {
         log.info("+++++ IN EmployeeService :: saveFromAppUser :: ChatId = {}, FullName - {} :: START",
                 appUser.getId(), appUser.getFullName());
         var checkEmployee = employeeRepository.findById(appUser.getId());
-        if (checkEmployee.isPresent()){
+        if (checkEmployee.isPresent()) {
             var employee = checkEmployee.get();
             editEmployee(employee, appUser);
         } else {
             var newEmployee = Employee.builder()
                     .id(appUser.getId())
-                    .idDepartment(appUser.getIdDepartment())
+                    .idDepartment(Department.builder()
+                            .id(appUser.getIdDepartment())
+                            .build())
                     .fullName(appUser.getFullName())
                     .tgFirstName(appUser.getTgFirstName())
                     .role(appUser.getRole())
@@ -45,10 +48,11 @@ public class EmployeeService {
         }
     }
 
-    private void editEmployee(Employee employee, AppUser appUser){
+    private void editEmployee(Employee employee, AppUser appUser) {
         log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: START",
                 appUser.getId(), appUser.getFullName());
-        employee.setIdDepartment(appUser.getIdDepartment());
+        employee.setIdDepartment(Department.builder()
+                .id( appUser.getIdDepartment()).build());
         employee.setFullName(appUser.getFullName());
         employee.setTgFirstName(appUser.getTgFirstName());
         employee.setRole(appUser.getRole());
@@ -56,18 +60,18 @@ public class EmployeeService {
                 appUser.getId(), appUser.getFullName());
     }
 
-    public void showEmployeeInfo(Message message){
+    public void showEmployeeInfo(Message message) {
         log.info("+++++ IN EmployeeService :: showEmployeeInfo :: ChatId - {} +++++", message.getChatId());
         var checkEmployee = employeeRepository.findById(message.getChatId());
-        if (checkEmployee.isPresent()){
+        if (checkEmployee.isPresent()) {
             var employee = checkEmployee.get();
             var sendMsg = new StringBuilder();
             sendMsg.append(BotConst.PROFILE_MSG);
-            sendMsg.append(String.format("_Фамилия Имя:_ *%s*\n", employee.getFullName()));
-            sendMsg.append(String.format("_Telegram Имя:_ *%s*\n", employee.getTgFirstName()));
-            sendMsg.append(String.format("_Отдел/магазин:_ *%s*\n", employee.getIdDepartment()));
-            sendMsg.append(String.format("_Права доступа:_ *%s*\n", employee.getRole()));
-            sendMsg.append(String.format("_Last update:_ *%s*\n",
+            sendMsg.append(String.format("_Фамилия Имя:_ *__%s__*\n", employee.getFullName()));
+            sendMsg.append(String.format("_Telegram Имя:_ *__%s__*\n", employee.getTgFirstName()));
+            sendMsg.append(String.format("_Отдел/магазин:_ *__%s__*\n", employee.getIdDepartment().getName()));
+            sendMsg.append(String.format("_Права доступа:_ *__%s__*\n", employee.getRole()));
+            sendMsg.append(String.format("_Last update:_ *__%s__*\n",
                     new SimpleDateFormat("dd/MM/yyyy").format(employee.getUpdatedAt())));
             messageService.sendMessage(message, sendMsg.toString());
         } else {

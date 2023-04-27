@@ -19,7 +19,9 @@ import java.sql.Timestamp;
 public class Employee {
     @Id
     private Long id;
-    private Long idDepartment;
+    @ManyToOne
+    @JoinColumn(name = "id_department", referencedColumnName="id")
+    private Department idDepartment;
     private String fullName;
     private String tgFirstName;
     @Enumerated(EnumType.STRING)

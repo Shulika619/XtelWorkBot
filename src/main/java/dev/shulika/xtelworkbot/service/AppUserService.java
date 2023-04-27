@@ -51,7 +51,7 @@ public class AppUserService {
     }
 
     public AppUser findUserById(long chatId) {
-        log.info("+++++ IN AppUserService :: findUserById :: CHECK ChatId - {}", chatId);
+        log.info("+++++ IN AppUserService :: findUserById :: CHECK :: ChatId - {}", chatId);
         return appUserRepository.findById(chatId).orElse(null);
     }
 
