@@ -1,9 +1,7 @@
 package dev.shulika.xtelworkbot.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,24 +9,25 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "Post")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser {
+public class Post {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    private Long employeeId;
+
     private Long departmentId;
-    private String fullName;
-    private String tgFirstName;
-    @Enumerated(EnumType.STRING)
-    private State state;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+
+    private String textMsg;
+
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
     private Timestamp updatedAt;
-    private Long sendTo;
 }

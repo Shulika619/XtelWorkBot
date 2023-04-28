@@ -19,6 +19,7 @@ public class MessageHandler {
     private final AppUserService appUserService;
     private final RegistrationHandler registrationHandler;
     private final EmployeeService employeeService;
+    private final SendHandler sendHandler;
 
     public void switchMessagesByType(Update update) {
         var message = update.getMessage();
@@ -46,11 +47,15 @@ public class MessageHandler {
             log.info("+++++ IN MessageHandler :: STATE NULL/NONE/CANCEL +++++");
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
+                case COMMAND_SEND -> sendHandler.selectDepartmentStep1(message);
                 case COMMAND_REGISTRATION -> registrationHandler.regSwitch(message, State.START_OR_CANCEL_REG);
                 case COMMAND_PROFILE -> employeeService.showEmployeeInfo(message);
                 case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
                 default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
             }
+        } else if (user.getState().equals(State.SEND_MSG)) {
+            log.info("+++++ IN MessageHandler :: SEND_MSG = TEXT +++++");
+            sendHandler.sendMsgTextStep3(message);
         } else {
             var state = user.getState();
             log.info("+++++ IN MessageHandler :: STATE - {} NOW +++++", state);

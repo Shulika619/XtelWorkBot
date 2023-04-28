@@ -75,7 +75,7 @@ public class AppUserService {
     public void setDepartmentId(Message message, long idDepartment) {
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
-        user.setIdDepartment(idDepartment);
+        user.setDepartmentId(idDepartment);
         log.info("+++++ IN AppUserService :: setDepartmentId :: ChatId - {}, FirstName - {}, DepartmentId - {} :: Saved",
                 message.getChatId(), message.getChat().getFirstName(), idDepartment);
     }
@@ -89,7 +89,7 @@ public class AppUserService {
         log.info("+++++ IN AppUserService :: isDepartmentPassCorrect :: START +++++");
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
-        var selectedDepartmentId = user.getIdDepartment();
+        var selectedDepartmentId = user.getDepartmentId();
         var department = departmentRepository.findById(selectedDepartmentId)
                 .orElseThrow(() -> new NotFoundException("----- Department Not found-----"));
         if (department.getName().equals(Role.BOSS.toString())){
@@ -101,13 +101,19 @@ public class AppUserService {
         return department.getPassword().equals(message.getText());
     }
 
-
-
     public void saveEmployee(Message message) {
         log.info("+++++ IN AppUserService :: saveEmployee :: ChatId - {}, FirstName - {} :: START",
                 message.getChatId(), message.getChat().getFirstName());
         var user = appUserRepository.findById(message.getChatId())
                 .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         employeeService.saveFromAppUser(user);
+    }
+
+    public  void setSendTo(Message message, Long departmentId){
+        log.info("+++++ IN AppUserService :: setSendTo :: ChatId - {}, FirstName - {}, departmentId - {} ",
+                message.getChatId(), message.getChat().getFirstName(), departmentId);
+        var user = appUserRepository.findById(message.getChatId())
+                .orElseThrow(() -> new NotFoundException("----- User Not found-----"));
+        user.setSendTo(departmentId);
     }
 }

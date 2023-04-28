@@ -45,20 +45,13 @@ public class RegistrationHandler {
         }
     }
 
-    private InlineKeyboardButton createCancelButton() {
-        return InlineKeyboardButton.builder()
-                .text(BTN_CANCEL)
-                .callbackData(BTN_CANCEL_CALLBACK)
-                .build();
-    }
-
     private void startOrCancel(Message message) {
         log.info("+++++ IN RegistrationHandler :: startOrCancel NOW:: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(List.of(
-                createCancelButton(),
+                messageService.createCancelButton(),
                 InlineKeyboardButton.builder()
                         .text(BTN_START_REG)
                         .callbackData(BTN_START_REG_CALLBACK)
@@ -74,7 +67,7 @@ public class RegistrationHandler {
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(Collections.singletonList(createCancelButton()));
+        keyboard.add(Collections.singletonList(messageService.createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendEditInlineKeyboardMarkup(
                 message, REG_MSG_COMMON_PASS, inlineKeyboardMarkup);
@@ -103,7 +96,7 @@ public class RegistrationHandler {
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(Collections.singletonList(createCancelButton()));
+        keyboard.add(Collections.singletonList(messageService.createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_INPUT_FULL_NAME, inlineKeyboardMarkup);
@@ -129,11 +122,11 @@ public class RegistrationHandler {
             keyboard.add(List.of(
                     InlineKeyboardButton.builder()
                             .text(department.getName())
-                            .callbackData("DEPARTMENT:" + department.getId())
+                            .callbackData(BTN_DEPARTMENT_REG_CALLBACK + ":" + department.getId())
                             .build()
             ));
         }
-        keyboard.add(Collections.singletonList(createCancelButton()));
+        keyboard.add(Collections.singletonList(messageService.createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_SELECT_DEPARTMENT, inlineKeyboardMarkup);
@@ -145,7 +138,7 @@ public class RegistrationHandler {
                 message.getChatId(), message.getChat().getFirstName());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(Collections.singletonList(createCancelButton()));
+        keyboard.add(Collections.singletonList(messageService.createCancelButton()));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         appUserService.setDepartmentId(message, Integer.parseInt(value));
         appUserService.changeState(message, State.CHECK_DEPARTMENT_PASS);

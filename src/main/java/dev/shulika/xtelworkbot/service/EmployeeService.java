@@ -8,7 +8,6 @@ import dev.shulika.xtelworkbot.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -36,7 +35,7 @@ public class EmployeeService {
             var newEmployee = Employee.builder()
                     .id(appUser.getId())
                     .idDepartment(Department.builder()
-                            .id(appUser.getIdDepartment())
+                            .id(appUser.getDepartmentId())
                             .build())
                     .fullName(appUser.getFullName())
                     .tgFirstName(appUser.getTgFirstName())
@@ -52,12 +51,16 @@ public class EmployeeService {
         log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: START",
                 appUser.getId(), appUser.getFullName());
         employee.setIdDepartment(Department.builder()
-                .id( appUser.getIdDepartment()).build());
+                .id( appUser.getDepartmentId()).build());
         employee.setFullName(appUser.getFullName());
         employee.setTgFirstName(appUser.getTgFirstName());
         employee.setRole(appUser.getRole());
         log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: COMPLETE",
                 appUser.getId(), appUser.getFullName());
+    }
+
+    public boolean existById(Long employeeId){
+        return employeeRepository.existsById(employeeId);
     }
 
     public void showEmployeeInfo(Message message) {

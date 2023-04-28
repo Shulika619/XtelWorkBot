@@ -5,11 +5,12 @@ public class BotConst {
  :::::  List Commands:::::
 start - Начало работы
 cancel - Отмена операции
+send - Отправить уведомление
 reg - Регистрация сотрудника
 profile - Аккаунт
 help - Помощь
 
-/send - Отправить рассылку (*только Админ)
+?Отправить рассылку (только Админ)?
 */
 
     // MESSAGES ------------------------------------
@@ -21,6 +22,7 @@ help - Помощь
             📋 *_Список доступных команд:_* 📋\n
             /start \\- __Начало работы__, _запустить бот или начать сначала_\n
             /cancel \\- __Отмена операции__, _завершит выполнение любой операции_\n
+            /send \\- __Отправить уведомление__, _для выбранного отдела или всех сотрудников_\n
             /reg \\- __Регистрация сотрудника__, _для получения уведомлений необходимо пройти регистрацию, следуя инструкциям укажите пароль и выберите отдел/магазин_\n
             /profile \\- __Аккаунт__, _информация об учетной записи_\n
             /help \\- __Помощь и доступные команды__, список доступных команд и описание\n
@@ -46,21 +48,30 @@ help - Помощь
                     """;
     public static final String REG_MSG_REG_COMPLETE = "✅ *Регистрация прошла успешно* ✅\n";
     public static final String PROFILE_MSG = "ℹ️ *Профиль пользователя* ℹ️\n\n";
-    public static final String PROFILE_NOT_FOUND = "❌ *Профиль не найден* ❌\n\n/reg \\- __Регистрация сотрудника__";
-
+    public static final String PROFILE_NOT_FOUND = "❌ *Вы не зарегистрированы* ❌\n\n/reg \\- __Регистрация сотрудника__";
+    public static final String SEND_MSG = """
+            ✉️ *_Отправить уведомление_* ✉️\n\n
+            ➡️ *__ТЕКСТ__* _просто введите текст и нажмите отправить_\n
+            ➡️ *__Фото\\+Текст__* _прикрепите фото и введите подпись_\n
+            ➡️ *__Файл\\+Текст__* _прикрепите файл и введите подпись_\n
+                    """;
+    public static final String SEND_MSG_COMPLETE = "✅ *Отправка прошла успешно* ✅\n";
 
     // COMMANDS ---------------------------------------
     public static final String COMMAND_START = "/start";
     public static final String COMMAND_CANCEL = "/cancel";
+    public static final String COMMAND_SEND = "/send";
     public static final String COMMAND_REGISTRATION = "/reg";
     public static final String COMMAND_PROFILE = "/profile";
     public static final String COMMAND_HELP = "/help";
 
 
     // BUTTONS AND CALLBACK -----------------------------------
-    public static final String BTN_CANCEL = "Отмена";
+    public static final String BTN_CANCEL = "❌ Отмена";
     public static final String BTN_CANCEL_CALLBACK = "CANCEL:null";
-    public static final String BTN_START_REG = "Начать";
+    public static final String BTN_START_REG = "▶️ Начать";
     public static final String BTN_START_REG_CALLBACK = "START_REG:null";
+    public static final String BTN_DEPARTMENT_REG_CALLBACK = "REG_DEPARTMENT";
+    public static final String BTN_DEPARTMENT_SEND_CALLBACK = "SEND_DEPARTMENT";
 
 }

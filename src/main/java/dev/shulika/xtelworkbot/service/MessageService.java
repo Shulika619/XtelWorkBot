@@ -10,9 +10,10 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static dev.shulika.xtelworkbot.BotConst.PROCESSED_MSG;
+import static dev.shulika.xtelworkbot.BotConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +66,13 @@ public class MessageService {
         delMsg.setChatId(message.getChatId());
         delMsg.setMessageId(message.getMessageId());
         executeDeleteMsg(delMsg);
+    }
+
+    public InlineKeyboardButton createCancelButton() {
+        return InlineKeyboardButton.builder()
+                .text(BTN_CANCEL)
+                .callbackData(BTN_CANCEL_CALLBACK)
+                .build();
     }
 
     public void processed(Message message) {
