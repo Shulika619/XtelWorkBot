@@ -25,6 +25,7 @@ public class MessageService {
         var sendMsg = SendMessage.builder()
                 .text(sendText)
                 .chatId(chatId)
+                .parseMode(ParseMode.MARKDOWNV2)
                 .build();
         executeSendMsg(sendMsg);
     }

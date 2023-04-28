@@ -54,9 +54,12 @@ public class PostService {
         }
 
         var sendMsg = new StringBuilder();
-        sendMsg.append("Отправитель: " + post.getFromEmployee().getFullName());
-        sendMsg.append("\nПолучатели: " + post.getToDepartment().getName());
-        sendMsg.append("\nТекст: " + post.getTextMsg());
+        sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление* \uD83D\uDCE9"));
+        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*",
+                post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+        sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+        sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
+
 
         for (Employee employee : employeeList) {
             messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString());
