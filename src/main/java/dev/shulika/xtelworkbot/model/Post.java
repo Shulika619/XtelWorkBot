@@ -20,7 +20,9 @@ public class Post {
     @Column(name = "id")
     private Long id;
 
-    private Long employeeId;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employeeId;
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department sendToDepartment;

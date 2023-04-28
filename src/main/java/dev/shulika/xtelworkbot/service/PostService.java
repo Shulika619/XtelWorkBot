@@ -1,6 +1,7 @@
 package dev.shulika.xtelworkbot.service;
 
 import dev.shulika.xtelworkbot.model.Department;
+import dev.shulika.xtelworkbot.model.Employee;
 import dev.shulika.xtelworkbot.model.Post;
 import dev.shulika.xtelworkbot.repository.AppUserRepository;
 import dev.shulika.xtelworkbot.repository.PostRepository;
@@ -25,7 +26,10 @@ public class PostService {
         var appUser = appUserRepository.findById(message.getChatId()).
                 orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         var newPost = Post.builder()
-                .employeeId(message.getChatId())
+                .employeeId(Employee.builder()
+                        .id(message.getChatId())
+                        .build()
+                )
                 .sendToDepartment(Department.builder()
                         .id(appUser.getSendTo())
                         .build()
@@ -40,13 +44,14 @@ public class PostService {
     }
 
     public void sendPost(Long postId) {
-        log.info("+++++ IN PostService :: sendPost :: ID - {} :: START",postId);
+        log.info("+++++ IN PostService :: sendPost :: ID - {} :: START", postId);
 
 
         var oldPost = postRepository.getById(postId);
-        System.out.println("=================" + oldPost.getEmployeeId());
-        System.out.println("=================" + oldPost.getSendToDepartment());
-        System.out.println("=================" + oldPost.getSendToDepartment().getEmployees());
+        System.out.println("=================" + oldPost.getTextMsg());
+        System.out.println("=================" + oldPost.getEmployeeId().getFullName());
+        System.out.println("=================" + oldPost.getSendToDepartment().getName());
+//        System.out.println("=================" + oldPost.getSendToDepartment().getEmployees());
 
 
 //        log.info("+++++ IN PostService :: sendPost :: ID - {}, EmployeeId - {}, SendToDepartmentId - {}, TextMsg - {} :: COMPLETE",
