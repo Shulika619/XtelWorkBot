@@ -22,13 +22,12 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee employeeId;
+    private Employee fromEmployee;
     @ManyToOne
     @JoinColumn(name = "department_id")
-    private Department sendToDepartment;
+    private Department toDepartment;
 
     private String textMsg;
-
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp

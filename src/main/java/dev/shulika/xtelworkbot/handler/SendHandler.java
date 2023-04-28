@@ -67,9 +67,12 @@ public class SendHandler {
         log.info("+++++ IN SendHandler :: sendMsgTextStep3 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var postId = postService.createPost(message);
-        postService.sendPost(postId);
+        if (postService.sendPost(postId)) {
+            messageService.sendMessage(message, SEND_MSG_COMPLETE);
+        } else {
+            messageService.sendMessage(message, SEND_MSG_EMPTY_DEPARTMENT);
+        }
         appUserService.changeState(message, State.NONE);
-        messageService.sendMessage(message, SEND_MSG_COMPLETE);
     }
 
     public void sendMsgPhotoStep3(Message message) {

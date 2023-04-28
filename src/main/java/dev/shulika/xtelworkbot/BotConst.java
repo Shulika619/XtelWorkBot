@@ -56,6 +56,7 @@ help - Помощь
             ➡️ *__Файл\\+Текст__* _прикрепите файл и введите подпись_\n
                     """;
     public static final String SEND_MSG_COMPLETE = "✅ *Отправка прошла успешно* ✅\n";
+    public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️*На данный момент в отделе нет сотрудников*❗️️️️️\n";
 
     // COMMANDS ---------------------------------------
     public static final String COMMAND_START = "/start";

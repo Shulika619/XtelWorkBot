@@ -1,5 +1,6 @@
 package dev.shulika.xtelworkbot.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,9 +19,9 @@ public class Department {
     private String name;
     private String password;
 
-    @OneToMany(mappedBy="department", targetEntity = Employee.class)
+    @OneToMany(mappedBy="department")
     private List<Employee> employees;
 
-//    @OneToMany(mappedBy="sendToDepartment", targetEntity = Post.class)
+//    @OneToMany(mappedBy="sendToDepartment")
 //    private List<Post> posts;
 }

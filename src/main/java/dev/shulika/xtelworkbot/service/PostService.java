@@ -20,17 +20,18 @@ import javax.ws.rs.NotFoundException;
 public class PostService {
     private final PostRepository postRepository;
     private final AppUserRepository appUserRepository;
+    private final MessageService messageService;
 
     public Long createPost(Message message) {
         log.info("+++++ IN PostService :: createPost :: ChatId - {} :: START +++++", message.getChatId());
         var appUser = appUserRepository.findById(message.getChatId()).
                 orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         var newPost = Post.builder()
-                .employeeId(Employee.builder()
+                .fromEmployee(Employee.builder()
                         .id(message.getChatId())
                         .build()
                 )
-                .sendToDepartment(Department.builder()
+                .toDepartment(Department.builder()
                         .id(appUser.getSendTo())
                         .build()
                 )
@@ -40,22 +41,31 @@ public class PostService {
         log.info("+++++ IN PostService :: createPost :: ChatId - {} IdPost - {}:: COMPLETE +++++",
                 message.getChatId(), savedPost.getId());
         return savedPost.getId();
-//        sendPost(savedPost);
     }
 
-    public void sendPost(Long postId) {
+    public boolean sendPost(Long postId) {
         log.info("+++++ IN PostService :: sendPost :: ID - {} :: START", postId);
 
+        var post = postRepository.getById(postId);
+        var employeeList = post.getToDepartment().getEmployees();
+        if (employeeList.isEmpty()) {
+            log.error("----- IN PostService :: sendPost FAIL - Employees is Empty :: PostId - {}", postId);
+            return false;
+        }
 
-        var oldPost = postRepository.getById(postId);
-        System.out.println("=================" + oldPost.getTextMsg());
-        System.out.println("=================" + oldPost.getEmployeeId().getFullName());
-        System.out.println("=================" + oldPost.getSendToDepartment().getName());
-//        System.out.println("=================" + oldPost.getSendToDepartment().getEmployees());
+        var sendMsg = new StringBuilder();
+        sendMsg.append("Отправитель: " + post.getFromEmployee().getFullName());
+        sendMsg.append("\nПолучатели: " + post.getToDepartment().getName());
+        sendMsg.append("\nТекст: " + post.getTextMsg());
 
+        for (Employee employee : employeeList) {
+            messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString());
+            System.out.println("===================== " + employee.getId());
+        }
 
-//        log.info("+++++ IN PostService :: sendPost :: ID - {}, EmployeeId - {}, SendToDepartmentId - {}, TextMsg - {} :: COMPLETE",
-//                post.getId(), post.getEmployeeId(), post.getDepartment().getId(), post.getTextMsg());
+        log.info("+++++ IN PostService :: sendPost :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
+                post.getId(), post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+        return true;
     }
 
 }

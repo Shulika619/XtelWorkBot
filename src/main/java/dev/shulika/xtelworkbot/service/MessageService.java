@@ -21,6 +21,14 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 public class MessageService {
     private final TgBot tgBot;
 
+    public void sendMessageToDepartment(Long chatId, String sendText) {
+        var sendMsg = SendMessage.builder()
+                .text(sendText)
+                .chatId(chatId)
+                .build();
+        executeSendMsg(sendMsg);
+    }
+
     public void sendMessage(Message message, String sendText) {
         var sendMsg = SendMessage.builder()
                 .text(sendText)
