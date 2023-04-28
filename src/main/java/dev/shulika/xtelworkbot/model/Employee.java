@@ -20,8 +20,8 @@ public class Employee {
     @Id
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "id_department", referencedColumnName="id")
-    private Department idDepartment;
+    @JoinColumn(name = "department_id")
+    private Department department;
     private String fullName;
     private String tgFirstName;
     @Enumerated(EnumType.STRING)

@@ -34,7 +34,7 @@ public class EmployeeService {
         } else {
             var newEmployee = Employee.builder()
                     .id(appUser.getId())
-                    .idDepartment(Department.builder()
+                    .department(Department.builder()
                             .id(appUser.getDepartmentId())
                             .build())
                     .fullName(appUser.getFullName())
@@ -50,7 +50,7 @@ public class EmployeeService {
     private void editEmployee(Employee employee, AppUser appUser) {
         log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: START",
                 appUser.getId(), appUser.getFullName());
-        employee.setIdDepartment(Department.builder()
+        employee.setDepartment(Department.builder()
                 .id( appUser.getDepartmentId()).build());
         employee.setFullName(appUser.getFullName());
         employee.setTgFirstName(appUser.getTgFirstName());
@@ -72,7 +72,7 @@ public class EmployeeService {
             sendMsg.append(BotConst.PROFILE_MSG);
             sendMsg.append(String.format("_Фамилия Имя:_ *__%s__*\n", employee.getFullName()));
             sendMsg.append(String.format("_Telegram Имя:_ *__%s__*\n", employee.getTgFirstName()));
-            sendMsg.append(String.format("_Отдел/магазин:_ *__%s__*\n", employee.getIdDepartment().getName()));
+            sendMsg.append(String.format("_Отдел/магазин:_ *__%s__*\n", employee.getDepartment().getName()));
             sendMsg.append(String.format("_Права доступа:_ *__%s__*\n", employee.getRole()));
             sendMsg.append(String.format("_Last update:_ *__%s__*\n",
                     new SimpleDateFormat("dd/MM/yyyy").format(employee.getUpdatedAt())));

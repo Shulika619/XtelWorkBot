@@ -18,6 +18,6 @@ public class Department {
     private String name;
     private String password;
 
-    @OneToMany(mappedBy="idDepartment")
-    private List<Employee> employee;
+    @OneToMany(mappedBy="department", targetEntity = Employee.class)
+    private List<Employee> employees;
 }
