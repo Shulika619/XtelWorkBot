@@ -21,8 +21,9 @@ public class Post {
     private Long id;
 
     private Long employeeId;
-
-    private Long departmentId;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department sendToDepartment;
 
     private String textMsg;
 

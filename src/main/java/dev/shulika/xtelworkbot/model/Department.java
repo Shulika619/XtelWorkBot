@@ -20,4 +20,7 @@ public class Department {
 
     @OneToMany(mappedBy="department", targetEntity = Employee.class)
     private List<Employee> employees;
+
+//    @OneToMany(mappedBy="sendToDepartment", targetEntity = Post.class)
+//    private List<Post> posts;
 }

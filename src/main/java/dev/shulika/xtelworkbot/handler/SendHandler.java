@@ -66,7 +66,8 @@ public class SendHandler {
     public void sendMsgTextStep3(Message message) {
         log.info("+++++ IN SendHandler :: sendMsgTextStep3 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
-        postService.createPost(message);
+        var postId = postService.createPost(message);
+        postService.sendPost(postId);
         appUserService.changeState(message, State.NONE);
         messageService.sendMessage(message, SEND_MSG_COMPLETE);
     }
