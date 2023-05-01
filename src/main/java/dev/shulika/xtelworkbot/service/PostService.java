@@ -10,8 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import javax.ws.rs.NotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static dev.shulika.xtelworkbot.BotConst.*;
 
 @Service
 @Transactional
@@ -54,21 +60,31 @@ public class PostService {
         }
 
         var sendMsg = new StringBuilder();
-        sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление* \uD83D\uDCE9"));
-        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*",
-                post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+        sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление № __%d__* \uD83D\uDCE9", postId));
+        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
         sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
         sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
 
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(List.of(
+                InlineKeyboardButton.builder()
+                        .text(BTN_CANCEL_TASK)
+                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text(BTN_ACCEPT_TASK)
+                        .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
+                        .build()
+        ));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
 
         for (Employee employee : employeeList) {
-            messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString());
-            System.out.println("===================== " + employee.getId());
+            messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString(), inlineKeyboardMarkup);
         }
 
         log.info("+++++ IN PostService :: sendPost :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
-                post.getId(), post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+                postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
         return true;
     }
-
 }

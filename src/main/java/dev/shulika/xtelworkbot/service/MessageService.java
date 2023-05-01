@@ -21,12 +21,13 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 public class MessageService {
     private final TgBot tgBot;
 
-    public void sendMessageToDepartment(Long chatId, String sendText) {
+    public void sendMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
         var sendMsg = SendMessage.builder()
                 .text(sendText)
                 .chatId(chatId)
                 .parseMode(ParseMode.MARKDOWNV2)
                 .build();
+        sendMsg.setReplyMarkup(inlineKeyboardMarkup);
         executeSendMsg(sendMsg);
     }
 
@@ -70,7 +71,7 @@ public class MessageService {
         executeEditMsg(sendEditMsg);
     }
 
-    public void deleteMsg(Message message){
+    public void deleteMsg(Message message) {
         var delMsg = new DeleteMessage();
         delMsg.setChatId(message.getChatId());
         delMsg.setMessageId(message.getMessageId());
@@ -80,7 +81,7 @@ public class MessageService {
     public InlineKeyboardButton createCancelButton() {
         return InlineKeyboardButton.builder()
                 .text(BTN_CANCEL)
-                .callbackData(BTN_CANCEL_CALLBACK)
+                .callbackData(BTN_CANCEL_CALLBACK + ":" + null)
                 .build();
     }
 

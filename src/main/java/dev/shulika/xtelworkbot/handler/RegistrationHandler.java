@@ -54,7 +54,7 @@ public class RegistrationHandler {
                 messageService.createCancelButton(),
                 InlineKeyboardButton.builder()
                         .text(BTN_START_REG)
-                        .callbackData(BTN_START_REG_CALLBACK)
+                        .callbackData(BTN_START_REG_CALLBACK +":" + null)
                         .build()
         ));
         inlineKeyboardMarkup.setKeyboard(keyboard);

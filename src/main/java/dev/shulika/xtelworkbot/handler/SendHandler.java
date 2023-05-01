@@ -75,6 +75,18 @@ public class SendHandler {
         appUserService.changeState(message, State.NONE);
     }
 
+    public void changeSendMsgStatusCancel(Message message, String value) {
+        log.info("+++++ IN SendHandler :: changeSendMsgStatusCancel NOW :: Post - {}, ChatId - {}, FirstName - {}",
+                value, message.getChatId(), message.getChat().getFirstName());
+        System.out.println("+++++ ChatId - " + message.getMessageId());
+    }
+
+    public void changeSendMsgStatusAccept(Message message, String value) {
+        log.info("+++++ IN SendHandler :: changeSendMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
+                value, message.getChatId(), message.getChat().getFirstName());
+        System.out.println("+++++ ChatId - " + message.getMessageId());
+    }
+
     public void sendMsgPhotoStep3(Message message) {
 
         appUserService.changeState(message, State.NONE);

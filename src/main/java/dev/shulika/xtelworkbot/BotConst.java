@@ -46,7 +46,7 @@ help - Помощь
             🔑❌ *_Неправильный пароль2_* ❌🔑\n
             *__Повторите ввод__* _или используйте_ /cancel \\- *__Отмена__*\n
                     """;
-    public static final String REG_MSG_REG_COMPLETE = "✅ *Регистрация прошла успешно* ✅\n";
+    public static final String REG_MSG_REG_COMPLETE = "✅ *Регистрация прошла успешно* ✅\n\nℹ️ /profile \\- _Посмотреть информация об учетной записи_";
     public static final String PROFILE_MSG = "ℹ️ *Профиль пользователя* ℹ️\n\n";
     public static final String PROFILE_NOT_FOUND = "❌ *Вы не зарегистрированы* ❌\n\n/reg \\- __Регистрация сотрудника__";
     public static final String SEND_MSG = """
@@ -69,10 +69,13 @@ help - Помощь
 
     // BUTTONS AND CALLBACK -----------------------------------
     public static final String BTN_CANCEL = "❌ Отмена";
-    public static final String BTN_CANCEL_CALLBACK = "CANCEL:null";
+    public static final String BTN_CANCEL_CALLBACK = "CANCEL";
     public static final String BTN_START_REG = "▶️ Начать";
-    public static final String BTN_START_REG_CALLBACK = "START_REG:null";
+    public static final String BTN_START_REG_CALLBACK = "START_REG";
     public static final String BTN_DEPARTMENT_REG_CALLBACK = "REG_DEPARTMENT";
     public static final String BTN_DEPARTMENT_SEND_CALLBACK = "SEND_DEPARTMENT";
-
+    public static final String BTN_CANCEL_TASK = "❌ Отмена";
+    public static final String BTN_CANCEL_TASK_CALLBACK = "CANCEL_TASK";
+    public static final String BTN_ACCEPT_TASK = "\uD83D\uDCCC Взять задание";
+    public static final String BTN_ACCEPT_TASK_CALLBACK = "ACCEPT_TASK";
 }

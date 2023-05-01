@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static dev.shulika.xtelworkbot.BotConst.BTN_DEPARTMENT_REG_CALLBACK;
-import static dev.shulika.xtelworkbot.BotConst.BTN_DEPARTMENT_SEND_CALLBACK;
+import static dev.shulika.xtelworkbot.BotConst.*;
 
 @Component
 @RequiredArgsConstructor
@@ -34,10 +33,12 @@ public class CallbackQueryHandler {
 //        var firstName = query.getFrom().getFirstName();
 
         switch (action) {
-            case "CANCEL" -> appUserService.cancelCommand(message);
-            case "START_REG" -> registrationHandler.regSwitch(message, State.COMMON_PASS);
+            case BTN_CANCEL_CALLBACK -> appUserService.cancelBtn(message);
+            case BTN_START_REG_CALLBACK -> registrationHandler.regSwitch(message, State.COMMON_PASS);
             case BTN_DEPARTMENT_REG_CALLBACK -> registrationHandler.checkSelectDepartmentStep6(message, value);
             case BTN_DEPARTMENT_SEND_CALLBACK -> sendHandler.checkSelectDepartmentStep2(message, value);
+            case BTN_CANCEL_TASK_CALLBACK -> sendHandler.changeSendMsgStatusCancel(message, value);
+            case BTN_ACCEPT_TASK_CALLBACK -> sendHandler.changeSendMsgStatusAccept(message, value);
         }
     }
 }
