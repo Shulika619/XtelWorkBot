@@ -30,6 +30,14 @@ public class MessageService {
         sendMsg.setReplyMarkup(inlineKeyboardMarkup);
         executeSendMsg(sendMsg);
     }
+    public void sendMessageToDepartment(Long chatId, String sendText) {
+        var sendMsg = SendMessage.builder()
+                .text(sendText)
+                .chatId(chatId)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        executeSendMsg(sendMsg);
+    }
 
     public void sendMessage(Message message, String sendText) {
         var sendMsg = SendMessage.builder()

@@ -46,13 +46,11 @@ public class AppUserService {
         log.info("----- IN AppUserService :: cancelBtn :: ChatId - {}, FirstName - {} -----",
                 message.getChatId(), message.getChat().getFirstName());
         messageService.sendEditMessage(message, MSG_CANCEL);
-//        messageService.sendMessage(message, MSG_CANCEL);
         changeState(message, State.CANCEL);
     }
     public void cancelCommand(Message message) {
         log.info("----- IN AppUserService :: cancelCommand :: ChatId - {}, FirstName - {} -----",
                 message.getChatId(), message.getChat().getFirstName());
-//        messageService.sendEditMessage(message, MSG_CANCEL);
         messageService.sendMessage(message, MSG_CANCEL);
         changeState(message, State.CANCEL);
     }

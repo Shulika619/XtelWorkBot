@@ -28,6 +28,8 @@ public class SendHandler {
 
     public void selectDepartmentStep1(Message message) {
         if (!employeeService.existById(message.getChatId())) {
+            log.error("---- IN SendHandler :: selectDepartmentStep1 :: User not registered :: ChatId - {}, FirstName - {}",
+                    message.getChatId(), message.getChat().getFirstName());
             messageService.sendMessage(message, PROFILE_NOT_FOUND);
             return;
         }
@@ -75,16 +77,23 @@ public class SendHandler {
         appUserService.changeState(message, State.NONE);
     }
 
-    public void changeSendMsgStatusCancel(Message message, String value) {
-        log.info("+++++ IN SendHandler :: changeSendMsgStatusCancel NOW :: Post - {}, ChatId - {}, FirstName - {}",
-                value, message.getChatId(), message.getChat().getFirstName());
-        System.out.println("+++++ ChatId - " + message.getMessageId());
-    }
+//    public void changeSendMsgStatusCancel(Message message, String value) {
+//        log.info("+++++ IN SendHandler :: changeSendMsgStatusCancel NOW :: Post - {}, ChatId - {}, FirstName - {}",
+//                value, message.getChatId(), message.getChat().getFirstName());
+//        System.out.println("+++++ ChatId - " + message.getMessageId());
+//    }
 
     public void changeSendMsgStatusAccept(Message message, String value) {
         log.info("+++++ IN SendHandler :: changeSendMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
                 value, message.getChatId(), message.getChat().getFirstName());
-        System.out.println("+++++ ChatId - " + message.getMessageId());
+        var postId = Long.parseLong(value);
+        var chatId = message.getChatId();
+        if (postService.changeTaskExecutor(postId, chatId)){
+            messageService.sendEditMessage(message, SEND_MSG_CHANGED_EXECUTOR);
+            postService.sendPostNewExecutor(postId);
+        } else {
+            messageService.sendEditMessage(message, SEND_MSG_CHANGED_EXECUTOR_FAIL);
+        }
     }
 
     public void sendMsgPhotoStep3(Message message) {

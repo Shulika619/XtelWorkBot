@@ -57,6 +57,8 @@ help - Помощь
                     """;
     public static final String SEND_MSG_COMPLETE = "✅ *Отправка прошла успешно* ✅\n";
     public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️*На данный момент в отделе нет сотрудников*❗️️️️️\n";
+    public static final String SEND_MSG_CHANGED_EXECUTOR = "✅ *Вы приняли задание* ✅\n";
+    public static final String SEND_MSG_CHANGED_EXECUTOR_FAIL = "❗️ *Задачу принял другой сотрудник* ❗️\n";
 
     // COMMANDS ---------------------------------------
     public static final String COMMAND_START = "/start";

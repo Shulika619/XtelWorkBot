@@ -4,6 +4,7 @@ import dev.shulika.xtelworkbot.model.Department;
 import dev.shulika.xtelworkbot.model.Employee;
 import dev.shulika.xtelworkbot.model.Post;
 import dev.shulika.xtelworkbot.repository.AppUserRepository;
+import dev.shulika.xtelworkbot.repository.EmployeeRepository;
 import dev.shulika.xtelworkbot.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static dev.shulika.xtelworkbot.BotConst.*;
+import static dev.shulika.xtelworkbot.BotConst.BTN_ACCEPT_TASK;
+import static dev.shulika.xtelworkbot.BotConst.BTN_ACCEPT_TASK_CALLBACK;
 
 @Service
 @Transactional
@@ -27,6 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final AppUserRepository appUserRepository;
     private final MessageService messageService;
+    private final EmployeeRepository employeeRepository;
 
     public Long createPost(Message message) {
         log.info("+++++ IN PostService :: createPost :: ChatId - {} :: START +++++", message.getChatId());
@@ -51,27 +55,26 @@ public class PostService {
 
     public boolean sendPost(Long postId) {
         log.info("+++++ IN PostService :: sendPost :: ID - {} :: START", postId);
-
         var post = postRepository.getById(postId);
         var employeeList = post.getToDepartment().getEmployees();
         if (employeeList.isEmpty()) {
             log.error("----- IN PostService :: sendPost FAIL - Employees is Empty :: PostId - {}", postId);
             return false;
         }
-
         var sendMsg = new StringBuilder();
         sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление № __%d__* \uD83D\uDCE9", postId));
         sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
         sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
         sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
+        sendMsg.append("\n\n _\\*текст темы можно скопировать нажав на него_");
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(List.of(
-                InlineKeyboardButton.builder()
-                        .text(BTN_CANCEL_TASK)
-                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
-                        .build(),
+        keyboard.add(Collections.singletonList(
+//                InlineKeyboardButton.builder()
+//                        .text(BTN_CANCEL_TASK)
+//                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
+//                        .build(),
                 InlineKeyboardButton.builder()
                         .text(BTN_ACCEPT_TASK)
                         .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
@@ -82,9 +85,43 @@ public class PostService {
         for (Employee employee : employeeList) {
             messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString(), inlineKeyboardMarkup);
         }
-
         log.info("+++++ IN PostService :: sendPost :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
                 postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
         return true;
     }
+
+    public boolean changeTaskExecutor(Long postId, Long chatId) {
+        log.info("+++++ IN PostService :: changeTaskExecutor :: ID - {} :: START", postId);
+        var post = postRepository.getById(postId);
+        if (post.getTaskExecutor() != null) {
+            log.info("----- IN PostService :: changeTaskExecutor :: ID - {} :: FAIL - Task Executor not null", postId);
+            return false;
+        }
+        var employee = employeeRepository.getById(chatId);
+        post.setTaskExecutor(employee);
+        log.info("+++++ IN PostService :: changeTaskExecutor :: ID - {} :: COMPLETE", postId);
+        return true;
+    }
+
+    public boolean sendPostNewExecutor(Long postId) {
+        log.info("+++++ IN PostService :: sendPostNewExecutor :: ID - {} :: START", postId);
+        var post = postRepository.getById(postId);
+        var employeeList = post.getToDepartment().getEmployees();
+
+        var sendMsg = new StringBuilder();
+        sendMsg.append(String.format("\uD83D\uDCCC *Задание № __%d__ новый исполнитель* \uD83D\uDCCC", postId));
+        sendMsg.append(String.format("\n\n_Исполнитель:_ *%s \\(%s\\)*", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
+        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+        sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+        sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
+        sendMsg.append("\n\n _\\*текст темы можно скопировать нажав на него_");
+
+        for (Employee employee : employeeList) {
+            messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString());
+        }
+        log.info("+++++ IN PostService :: sendPostNewExecutor :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
+                postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+        return true;
+    }
+
 }

@@ -37,7 +37,7 @@ public class CallbackQueryHandler {
             case BTN_START_REG_CALLBACK -> registrationHandler.regSwitch(message, State.COMMON_PASS);
             case BTN_DEPARTMENT_REG_CALLBACK -> registrationHandler.checkSelectDepartmentStep6(message, value);
             case BTN_DEPARTMENT_SEND_CALLBACK -> sendHandler.checkSelectDepartmentStep2(message, value);
-            case BTN_CANCEL_TASK_CALLBACK -> sendHandler.changeSendMsgStatusCancel(message, value);
+//            case BTN_CANCEL_TASK_CALLBACK -> sendHandler.changeSendMsgStatusCancel(message, value);
             case BTN_ACCEPT_TASK_CALLBACK -> sendHandler.changeSendMsgStatusAccept(message, value);
         }
     }

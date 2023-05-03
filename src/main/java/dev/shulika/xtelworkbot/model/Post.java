@@ -21,11 +21,15 @@ public class Post {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "from_employee_id")
     private Employee fromEmployee;
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "to_department_id")
     private Department toDepartment;
+
+    @ManyToOne
+    @JoinColumn(name = "accepted_employee_id")
+    private Employee taskExecutor;
 
     private String textMsg;
     @CreationTimestamp
