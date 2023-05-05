@@ -102,6 +102,16 @@ public class MessageService {
         executeSendPhotoMsg(sendPhotoMsg);
     }
 
+    public void sendPhotoMessageToDepartment(Long chatId, String sendText, String fileId) {
+        var sendPhotoMsg = SendPhoto.builder()
+                .chatId(chatId)
+                .caption(sendText)
+                .photo(new InputFile(fileId))
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        executeSendPhotoMsg(sendPhotoMsg);
+    }
+
     public void sendDocMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup, String fileId) {
         var sendDocMsg = SendDocument.builder()
                 .chatId(chatId)
@@ -110,6 +120,16 @@ public class MessageService {
                 .parseMode(ParseMode.MARKDOWNV2)
                 .build();
         sendDocMsg.setReplyMarkup(inlineKeyboardMarkup);
+        executeSendDocMsg(sendDocMsg);
+    }
+
+    public void sendDocMessageToDepartment(Long chatId, String sendText, String fileId) {
+        var sendDocMsg = SendDocument.builder()
+                .chatId(chatId)
+                .caption(sendText)
+                .document(new InputFile(fileId))
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
         executeSendDocMsg(sendDocMsg);
     }
 

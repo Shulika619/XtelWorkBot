@@ -38,7 +38,9 @@ public class CallbackQueryHandler {
             case BTN_DEPARTMENT_REG_CALLBACK -> registrationHandler.checkSelectDepartmentStep6(message, value);
             case BTN_DEPARTMENT_SEND_CALLBACK -> sendHandler.checkSelectDepartmentStep2(message, value);
 //            case BTN_CANCEL_TASK_CALLBACK -> sendHandler.changeSendMsgStatusCancel(message, value);
-            case BTN_ACCEPT_TASK_CALLBACK -> sendHandler.changeSendMsgStatusAccept(message, value);
+            case BTN_ACCEPT_TXT_TASK_CALLBACK -> sendHandler.changeTxtMsgStatusAccept(message, value);
+            case BTN_ACCEPT_PHOTO_TASK_CALLBACK -> sendHandler.changePhotoMsgStatusAccept(message, value);
+            case BTN_ACCEPT_DOC_TASK_CALLBACK -> sendHandler.changeDocMsgStatusAccept(message, value);
         }
     }
 }

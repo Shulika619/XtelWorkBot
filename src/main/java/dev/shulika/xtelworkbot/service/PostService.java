@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static dev.shulika.xtelworkbot.BotConst.BTN_ACCEPT_TASK;
-import static dev.shulika.xtelworkbot.BotConst.BTN_ACCEPT_TASK_CALLBACK;
+import static dev.shulika.xtelworkbot.BotConst.*;
 
 @Service
 @Transactional
@@ -90,7 +89,7 @@ public class PostService {
 //                        .build(),
                 InlineKeyboardButton.builder()
                         .text(BTN_ACCEPT_TASK)
-                        .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
+                        .callbackData(BTN_ACCEPT_TXT_TASK_CALLBACK + ":" + postId)
                         .build()
         ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -144,7 +143,7 @@ public class PostService {
 //                        .build(),
                 InlineKeyboardButton.builder()
                         .text(BTN_ACCEPT_TASK)
-                        .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
+                        .callbackData(BTN_ACCEPT_PHOTO_TASK_CALLBACK + ":" + postId)
                         .build()
         ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -198,7 +197,7 @@ public class PostService {
 //                        .build(),
                 InlineKeyboardButton.builder()
                         .text(BTN_ACCEPT_TASK)
-                        .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
+                        .callbackData(BTN_ACCEPT_DOC_TASK_CALLBACK + ":" + postId)
                         .build()
         ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -235,6 +234,36 @@ public class PostService {
             messageService.sendMessageToDepartment(employee.getId(), sendMsg);
         }
         log.info("+++++ IN PostService :: sendPostNewExecutor :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
+                postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+        return true;
+    }
+
+    public boolean sendPhotoPostNewExecutor(Long postId) {
+        log.info("+++++ IN PostService :: sendPhotoPostNewExecutor :: ID - {} :: START", postId);
+        var post = postRepository.getById(postId);
+        var employeeList = post.getToDepartment().getEmployees();
+
+        var sendMsg = postTxtTemplate(post);
+
+        for (Employee employee : employeeList) {
+            messageService.sendPhotoMessageToDepartment(employee.getId(), sendMsg, post.getFileId());
+        }
+        log.info("+++++ IN PostService :: sendPhotoPostNewExecutor :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
+                postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+        return true;
+    }
+
+    public boolean sendDocPostNewExecutor(Long postId) {
+        log.info("+++++ IN PostService :: sendDocPostNewExecutor :: ID - {} :: START", postId);
+        var post = postRepository.getById(postId);
+        var employeeList = post.getToDepartment().getEmployees();
+
+        var sendMsg = postTxtTemplate(post);
+
+        for (Employee employee : employeeList) {
+            messageService.sendDocMessageToDepartment(employee.getId(), sendMsg, post.getFileId());
+        }
+        log.info("+++++ IN PostService :: sendDocPostNewExecutor :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
                 postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
         return true;
     }

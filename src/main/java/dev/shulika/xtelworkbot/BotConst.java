@@ -79,5 +79,7 @@ help - Помощь
     public static final String BTN_CANCEL_TASK = "❌ Отмена";
     public static final String BTN_CANCEL_TASK_CALLBACK = "CANCEL_TASK";
     public static final String BTN_ACCEPT_TASK = "\uD83D\uDCCC Взять задание";
-    public static final String BTN_ACCEPT_TASK_CALLBACK = "ACCEPT_TASK";
+    public static final String BTN_ACCEPT_TXT_TASK_CALLBACK = "ACCEPT_TXT_TASK";
+    public static final String BTN_ACCEPT_PHOTO_TASK_CALLBACK = "ACCEPT_PHOTO_TASK";
+    public static final String BTN_ACCEPT_DOC_TASK_CALLBACK = "ACCEPT_DOC_TASK";
 }

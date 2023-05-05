@@ -107,8 +107,8 @@ public class SendHandler {
 //        System.out.println("+++++ ChatId - " + message.getMessageId());
 //    }
 
-    public void changeSendMsgStatusAccept(Message message, String value) {
-        log.info("+++++ IN SendHandler :: changeSendMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
+    public void changeTxtMsgStatusAccept(Message message, String value) {
+        log.info("+++++ IN SendHandler :: changeTxtMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
                 value, message.getChatId(), message.getChat().getFirstName());
         var postId = Long.parseLong(value);
         var chatId = message.getChatId();
@@ -117,6 +117,33 @@ public class SendHandler {
             postService.sendPostNewExecutor(postId);
         } else {
             messageService.sendEditMessage(message, SEND_MSG_CHANGED_EXECUTOR_FAIL);
+        }
+    }
+
+    public void changePhotoMsgStatusAccept(Message message, String value) {
+        log.info("+++++ IN SendHandler :: changePhotoMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
+                value, message.getChatId(), message.getChat().getFirstName());
+        var postId = Long.parseLong(value);
+        var chatId = message.getChatId();
+        if (postService.changeTaskExecutor(postId, chatId)){
+            messageService.deleteMsg(message);
+            postService.sendPhotoPostNewExecutor(postId);
+        } else {
+            messageService.deleteMsg(message);
+            messageService.sendMessage(message, SEND_MSG_CHANGED_EXECUTOR_FAIL);
+        }
+    }
+    public void changeDocMsgStatusAccept(Message message, String value) {
+        log.info("+++++ IN SendHandler :: changeDocMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
+                value, message.getChatId(), message.getChat().getFirstName());
+        var postId = Long.parseLong(value);
+        var chatId = message.getChatId();
+        if (postService.changeTaskExecutor(postId, chatId)){
+            messageService.deleteMsg(message);
+            postService.sendDocPostNewExecutor(postId);
+        } else {
+            messageService.deleteMsg(message);
+            messageService.sendMessage(message, SEND_MSG_CHANGED_EXECUTOR_FAIL);
         }
     }
 }
