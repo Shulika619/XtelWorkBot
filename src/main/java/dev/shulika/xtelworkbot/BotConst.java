@@ -58,7 +58,7 @@ help - Помощь
             ➡️ *__Файл\\+Текст__* _прикрепите файл и введите подпись_\n
                     """;
     public static final String SEND_MSG_COMPLETE = "✅ *Отправка прошла успешно* ✅\n";
-    public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️ *На данный момент в отделе нет сотрудников* ❗️️️️️\n";
+    public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️ *Сообщение сохранено, но на данный момент в отделе нет сотрудников для получения* ❗️️️️️\n";
     public static final String SEND_MSG_CHANGED_EXECUTOR = "✅ *Вы приняли задание* ✅\n";
     public static final String SEND_MSG_CHANGED_EXECUTOR_FAIL = "❗️ *Задачу принял другой сотрудник* ❗️\n";
     public static final String SEND_MSG_EMPTY_TASKS = "️️️️️️️️️️❗️️️️️ *Список заданий для выбранного отдела пуст*";

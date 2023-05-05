@@ -70,11 +70,11 @@ public class EmployeeService {
             var employee = checkEmployee.get();
             var sendMsg = new StringBuilder();
             sendMsg.append(BotConst.PROFILE_MSG);
-            sendMsg.append(String.format("_Фамилия Имя:_ *__%s__*\n", employee.getFullName()));
-            sendMsg.append(String.format("_Telegram Имя:_ *__%s__*\n", employee.getTgFirstName()));
-            sendMsg.append(String.format("_Отдел/магазин:_ *__%s__*\n", employee.getDepartment().getName()));
-            sendMsg.append(String.format("_Права доступа:_ *__%s__*\n", employee.getRole()));
-            sendMsg.append(String.format("_Last update:_ *__%s__*\n",
+            sendMsg.append(String.format("_Фамилия Имя:_ `%s`\n", employee.getFullName()));
+            sendMsg.append(String.format("_Telegram Имя:_ `%s`\n", employee.getTgFirstName()));
+            sendMsg.append(String.format("_Отдел/магазин:_ `%s`\n", employee.getDepartment().getName()));
+            sendMsg.append(String.format("_Права доступа:_ `%s`\n", employee.getRole()));
+            sendMsg.append(String.format("_Last update:_ `%s`\n",
                     new SimpleDateFormat("dd/MM/yyyy").format(employee.getUpdatedAt())));
             messageService.sendMessage(message, sendMsg.toString());
         } else {

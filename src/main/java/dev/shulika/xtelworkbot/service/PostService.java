@@ -42,10 +42,10 @@ public class PostService {
             sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление № __%d__* \uD83D\uDCE9", post.getId()));
         } else {
             sendMsg.append(String.format("\uD83D\uDCCC *Задание № __%d__ новый исполнитель* \uD83D\uDCCC", post.getId()));
-            sendMsg.append(String.format("\n\n_Исполнитель:_ *%s \\(%s\\)*", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
+            sendMsg.append(String.format("\n\n_Исполнитель:_ `%s (%s)`", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
         }
-        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
-        sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+        sendMsg.append(String.format("\n\n_От:_ `%s (%s)`", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+        sendMsg.append(String.format("\n_Кому:_ `%s`", post.getToDepartment().getName()));
         sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
         sendMsg.append("\n\n _\\*текст темы можно скопировать нажав на него_");
         return sendMsg.toString();
@@ -273,14 +273,14 @@ public class PostService {
 
         var departmentName = posts.get(0).getToDepartment().getName();
         var sendMsg = new StringBuilder();
-        sendMsg.append(String.format("%s: %s \\- %s\n", SEND_MSG_TASKS, date, departmentName));
+        sendMsg.append(String.format("%s: %s \\- `%s`\n", SEND_MSG_TASKS, date, departmentName));
         for (Post post : posts) {
             sendMsg.append(String.format("\n\uD83D\uDCE9 *№ %d* \uD83D\uDCE9\n", post.getId()));
-            sendMsg.append(String.format("_От:_ *%s \\(%s\\)* ", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
-            sendMsg.append(post.getFromEmployee().getDepartment().getName());
-            sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+            sendMsg.append(String.format("_От:_ `%s (%s) - %s`",
+                    post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName(),post.getFromEmployee().getDepartment().getName()));
+            sendMsg.append(String.format("\n_Кому:_ `%s`", post.getToDepartment().getName()));
             if (post.getTaskExecutor() != null)
-                sendMsg.append(String.format("\n_Исполнитель:_ *%s \\(%s\\)*", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
+                sendMsg.append(String.format("\n_Исполнитель:_ `%s (%s)`", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
             sendMsg.append(String.format("\n\uD83D\uDCAC_Тема:_ `%s`\n", post.getTextMsg()));
         }
         var inlineKeyboardMarkup = getInlineKeyboardMarkup(departmentId);

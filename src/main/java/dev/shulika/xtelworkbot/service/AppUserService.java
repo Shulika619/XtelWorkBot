@@ -28,7 +28,7 @@ public class AppUserService {
     public void saveNewAppUser(Message message) {
         var chatId = message.getChatId();
         String firstName = message.getChat().getFirstName();
-        messageService.sendMessage(message, String.format("%s, %s\\! \n\n%s", HELLO_MSG, firstName, FIRST_START_MSG));
+        messageService.sendMessage(message, String.format("%s, `%s`\\! \n\n%s", HELLO_MSG, firstName, FIRST_START_MSG));
 
         if (appUserRepository.findById(chatId).isEmpty()) {
             AppUser appUser = AppUser.builder()
