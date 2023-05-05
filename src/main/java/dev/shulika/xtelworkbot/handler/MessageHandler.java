@@ -20,6 +20,7 @@ public class MessageHandler {
     private final RegistrationHandler registrationHandler;
     private final EmployeeService employeeService;
     private final SendHandler sendHandler;
+    private final TaskListHandler taskListHandler;
 
     public void switchMessagesByType(Update update) {
         var message = update.getMessage();
@@ -48,6 +49,7 @@ public class MessageHandler {
             switch (message.getText()) {
                 case COMMAND_START -> appUserService.saveNewAppUser(message);
                 case COMMAND_SEND -> sendHandler.selectDepartmentStep1(message);
+                case COMMAND_LIST -> taskListHandler.selectDepartmentStep1(message);
                 case COMMAND_REGISTRATION -> registrationHandler.regSwitch(message, State.START_OR_CANCEL_REG);
                 case COMMAND_PROFILE -> employeeService.showEmployeeInfo(message);
                 case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);

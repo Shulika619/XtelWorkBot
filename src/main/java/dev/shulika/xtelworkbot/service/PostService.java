@@ -48,7 +48,6 @@ public class PostService {
     }
 
 
-
     public Long createTxtPost(Message message) {
         log.info("+++++ IN PostService :: createTxtPost :: ChatId - {} :: START +++++", message.getChatId());
         var appUser = appUserRepository.findById(message.getChatId()).
@@ -266,5 +265,26 @@ public class PostService {
         log.info("+++++ IN PostService :: sendDocPostNewExecutor :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
                 postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
         return true;
+    }
+
+    public void taskListDepartmentToday(Message message, Long departmentId) {
+        var posts = postRepository.findAllToDayPostByDepartmentId(departmentId);
+        System.out.println(" ================================== SIZE2 - " + posts.size());  // TODO: delete
+        if (posts.isEmpty()) {
+            messageService.sendEditMessage(message, SEND_MSG_TODAY_EMPTY_TASKS);
+            return;
+        }
+        var sendMsg = new StringBuilder();
+        sendMsg.append(SEND_MSG_TODAY_TASKS);
+        for (Post post : posts) {
+            sendMsg.append(String.format("\n\uD83D\uDCE9 *№ %d* \uD83D\uDCE9\n", post.getId()));
+            sendMsg.append(String.format("_От:_ *%s \\(%s\\)* ", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+            sendMsg.append(post.getFromEmployee().getDepartment().getName());
+            sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+            if (post.getTaskExecutor() != null)
+                sendMsg.append(String.format("\n_Исполнитель:_ *%s \\(%s\\)*", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
+            sendMsg.append(String.format("\n\uD83D\uDCAC_Тема:_ `%s`\n", post.getTextMsg()));
+        }
+        messageService.sendEditMessage(message, sendMsg.toString());
     }
 }

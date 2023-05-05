@@ -18,6 +18,7 @@ public class CallbackQueryHandler {
     private final RegistrationHandler registrationHandler;
     private final AppUserService appUserService;
     private final SendHandler sendHandler;
+    private final TaskListHandler taskListHandler;
 
     public void switchCallbackQueryByType(Update update) {
         var query = update.getCallbackQuery();
@@ -41,6 +42,7 @@ public class CallbackQueryHandler {
             case BTN_ACCEPT_TXT_TASK_CALLBACK -> sendHandler.changeTxtMsgStatusAccept(message, value);
             case BTN_ACCEPT_PHOTO_TASK_CALLBACK -> sendHandler.changePhotoMsgStatusAccept(message, value);
             case BTN_ACCEPT_DOC_TASK_CALLBACK -> sendHandler.changeDocMsgStatusAccept(message, value);
+            case BTN_DEPARTMENT_TASK_LIST_CALLBACK -> taskListHandler.checkSelectDepartmentStep2(message, value);
         }
     }
 }

@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "Post")
@@ -30,8 +32,14 @@ public class Post {
     @JoinColumn(name = "accepted_employee_id")
     private Employee taskExecutor;
     private String textMsg;
+
+//    @Temporal(TemporalType.DATE)
+//    @CreationTimestamp
+//    private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private Timestamp createdAt;
+    private Date createdAt;
     @UpdateTimestamp
     private Timestamp updatedAt;
     private String fileId;

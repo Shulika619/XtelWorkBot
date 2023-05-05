@@ -6,24 +6,26 @@ public class BotConst {
 start - Начало работы
 cancel - Отмена операции
 send - Отправить уведомление
+list - Список заданий
 reg - Регистрация сотрудника
 profile - Аккаунт
 help - Помощь
 
-?Отправить рассылку (только Админ)?
 */
 
     // MESSAGES ------------------------------------
+//    public static final String PROCESSED_MSG = "_Обрабатывается \\.\\.\\._";
     public static final String HELLO_MSG = "_Привет_";
-    public static final String PROCESSED_MSG = "_Обрабатывается \\.\\.\\._";
+    public static final String FIRST_START_MSG = "/reg \\- __Регистрация сотрудника__\n/help \\- __Помощь и доступные команды__";
     public static final String UNSUPPORTED_MSG = "_Неподдерживаемый тип сообщения\\!_";
     public static final String COMMAND_NOT_FOUND = "️❗️️️️️*_Команда отсутствует_*❗️️\\\nвведите или нажмите на /help _для получения списка доступных команд_";
     public static final String HELP_MSG = """
             📋 *_Список доступных команд:_* 📋\n
             /start \\- __Начало работы__, _запустить бот или начать сначала_\n
             /cancel \\- __Отмена операции__, _завершит выполнение любой операции_\n
-            /send \\- __Отправить уведомление__, _для выбранного отдела или всех сотрудников_\n
-            /reg \\- __Регистрация сотрудника__, _для получения уведомлений необходимо пройти регистрацию, следуя инструкциям укажите пароль и выберите отдел/магазин_\n
+            /send \\- __Отправить уведомление__, _для выбранного отдела_\n
+            /list \\- __Список заданий__, _для выбранного отдела_\n
+            /reg \\- __Регистрация сотрудника__, _для получения уведомлений необходимо пройти регистрацию, следуя инструкциям укажите пароль1, выберите отдел/магазин и введите пароль2_\n
             /profile \\- __Аккаунт__, _информация об учетной записи_\n
             /help \\- __Помощь и доступные команды__, список доступных команд и описание\n
             ||_Дополнительно:_|| \n
@@ -56,14 +58,18 @@ help - Помощь
             ➡️ *__Файл\\+Текст__* _прикрепите файл и введите подпись_\n
                     """;
     public static final String SEND_MSG_COMPLETE = "✅ *Отправка прошла успешно* ✅\n";
-    public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️*На данный момент в отделе нет сотрудников*❗️️️️️\n";
+    public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️ *На данный момент в отделе нет сотрудников* ❗️️️️️\n";
     public static final String SEND_MSG_CHANGED_EXECUTOR = "✅ *Вы приняли задание* ✅\n";
     public static final String SEND_MSG_CHANGED_EXECUTOR_FAIL = "❗️ *Задачу принял другой сотрудник* ❗️\n";
+    public static final String SEND_MSG_TODAY_EMPTY_TASKS = "️️️️️️️️️️❗️️️️️ *Сегодня список заданий для выбранного отдела пуст* ❗️️️️️\n";
+    public static final String SEND_MSG_TODAY_TASKS = "📝 *_Список заданий СЕГОДНЯ_* 📝\n";
+
 
     // COMMANDS ---------------------------------------
     public static final String COMMAND_START = "/start";
     public static final String COMMAND_CANCEL = "/cancel";
     public static final String COMMAND_SEND = "/send";
+    public static final String COMMAND_LIST = "/list";
     public static final String COMMAND_REGISTRATION = "/reg";
     public static final String COMMAND_PROFILE = "/profile";
     public static final String COMMAND_HELP = "/help";
@@ -76,10 +82,11 @@ help - Помощь
     public static final String BTN_START_REG_CALLBACK = "START_REG";
     public static final String BTN_DEPARTMENT_REG_CALLBACK = "REG_DEPARTMENT";
     public static final String BTN_DEPARTMENT_SEND_CALLBACK = "SEND_DEPARTMENT";
-    public static final String BTN_CANCEL_TASK = "❌ Отмена";
-    public static final String BTN_CANCEL_TASK_CALLBACK = "CANCEL_TASK";
+//    public static final String BTN_CANCEL_TASK = "❌ Отмена";
+//    public static final String BTN_CANCEL_TASK_CALLBACK = "CANCEL_TASK";
     public static final String BTN_ACCEPT_TASK = "\uD83D\uDCCC Взять задание";
     public static final String BTN_ACCEPT_TXT_TASK_CALLBACK = "ACCEPT_TXT_TASK";
     public static final String BTN_ACCEPT_PHOTO_TASK_CALLBACK = "ACCEPT_PHOTO_TASK";
     public static final String BTN_ACCEPT_DOC_TASK_CALLBACK = "ACCEPT_DOC_TASK";
+    public static final String BTN_DEPARTMENT_TASK_LIST_CALLBACK = "TASK_LIST_DEPARTMENT";
 }
