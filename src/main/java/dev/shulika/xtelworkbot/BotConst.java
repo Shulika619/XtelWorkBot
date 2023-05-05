@@ -61,8 +61,8 @@ help - Помощь
     public static final String SEND_MSG_EMPTY_DEPARTMENT = "️️️️️️️️️️❗️️️️️ *На данный момент в отделе нет сотрудников* ❗️️️️️\n";
     public static final String SEND_MSG_CHANGED_EXECUTOR = "✅ *Вы приняли задание* ✅\n";
     public static final String SEND_MSG_CHANGED_EXECUTOR_FAIL = "❗️ *Задачу принял другой сотрудник* ❗️\n";
-    public static final String SEND_MSG_TODAY_EMPTY_TASKS = "️️️️️️️️️️❗️️️️️ *Сегодня список заданий для выбранного отдела пуст* ❗️️️️️\n";
-    public static final String SEND_MSG_TODAY_TASKS = "📝 *_Список заданий СЕГОДНЯ_* 📝\n";
+    public static final String SEND_MSG_EMPTY_TASKS = "️️️️️️️️️️❗️️️️️ *Список заданий для выбранного отдела пуст*";
+    public static final String SEND_MSG_TASKS = "📝 *_Список заданий_*";
 
 
     // COMMANDS ---------------------------------------
@@ -89,4 +89,8 @@ help - Помощь
     public static final String BTN_ACCEPT_PHOTO_TASK_CALLBACK = "ACCEPT_PHOTO_TASK";
     public static final String BTN_ACCEPT_DOC_TASK_CALLBACK = "ACCEPT_DOC_TASK";
     public static final String BTN_DEPARTMENT_TASK_LIST_CALLBACK = "TASK_LIST_DEPARTMENT";
+    public static final String BTN_TASK_LIST_YESTERDAY_CALLBACK = "TASK_LIST_YESTERDAY";
+    public static final String BTN_TASK_LIST_2DAYS_CALLBACK = "TASK_LIST_2DAYS";
+    public static final String BTN_TASK_LIST_3DAYS_CALLBACK = "TASK_LIST_3DAYS";
+
 }

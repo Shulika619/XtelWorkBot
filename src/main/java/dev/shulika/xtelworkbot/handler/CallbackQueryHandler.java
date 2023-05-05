@@ -28,11 +28,6 @@ public class CallbackQueryHandler {
         String action = param[0];
         String value = param[1];
 
-//        var messageId = query.getMessage().getMessageId();
-//        var queryId = query.getId();
-//        var id = query.getFrom().getId();
-//        var firstName = query.getFrom().getFirstName();
-
         switch (action) {
             case BTN_CANCEL_CALLBACK -> appUserService.cancelBtn(message);
             case BTN_START_REG_CALLBACK -> registrationHandler.regSwitch(message, State.COMMON_PASS);
@@ -43,6 +38,9 @@ public class CallbackQueryHandler {
             case BTN_ACCEPT_PHOTO_TASK_CALLBACK -> sendHandler.changePhotoMsgStatusAccept(message, value);
             case BTN_ACCEPT_DOC_TASK_CALLBACK -> sendHandler.changeDocMsgStatusAccept(message, value);
             case BTN_DEPARTMENT_TASK_LIST_CALLBACK -> taskListHandler.checkSelectDepartmentStep2(message, value);
+            case BTN_TASK_LIST_YESTERDAY_CALLBACK -> taskListHandler.showYesterdayTasks(message, value);
+            case BTN_TASK_LIST_2DAYS_CALLBACK -> taskListHandler.show2DaysTasks(message, value);
+            case BTN_TASK_LIST_3DAYS_CALLBACK -> taskListHandler.show3DaysTasks(message, value);
         }
     }
 }

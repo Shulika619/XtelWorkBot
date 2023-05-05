@@ -55,6 +55,27 @@ public class TaskListHandler {
         log.info("+++++ IN TaskListHandler :: checkSelectDepartmentStep2 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departmentId = Long.valueOf(value);
-        postService.taskListDepartmentToday(message, departmentId);
+        postService.taskListDepartment(message, departmentId, 0);
+    }
+
+    public void showYesterdayTasks(Message message, String value) {
+        log.info("+++++ IN TaskListHandler :: showYesterdayTasks NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        var departmentId = Long.valueOf(value);
+        postService.taskListDepartment(message, departmentId, 1);
+    }
+
+    public void show2DaysTasks(Message message, String value) {
+        log.info("+++++ IN TaskListHandler :: show2DaysTasks NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        var departmentId = Long.valueOf(value);
+        postService.taskListDepartment(message, departmentId, 2);
+    }
+
+    public void show3DaysTasks(Message message, String value) {
+        log.info("+++++ IN TaskListHandler :: show2DaysTasks NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        var departmentId = Long.valueOf(value);
+        postService.taskListDepartment(message, departmentId, 3);
     }
 }

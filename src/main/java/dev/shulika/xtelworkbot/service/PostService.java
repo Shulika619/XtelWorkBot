@@ -15,6 +15,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import javax.ws.rs.NotFoundException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -136,10 +140,6 @@ public class PostService {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(Collections.singletonList(
-//                InlineKeyboardButton.builder()
-//                        .text(BTN_CANCEL_TASK)
-//                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
-//                        .build(),
                 InlineKeyboardButton.builder()
                         .text(BTN_ACCEPT_TASK)
                         .callbackData(BTN_ACCEPT_PHOTO_TASK_CALLBACK + ":" + postId)
@@ -190,10 +190,6 @@ public class PostService {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(Collections.singletonList(
-//                InlineKeyboardButton.builder()
-//                        .text(BTN_CANCEL_TASK)
-//                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
-//                        .build(),
                 InlineKeyboardButton.builder()
                         .text(BTN_ACCEPT_TASK)
                         .callbackData(BTN_ACCEPT_DOC_TASK_CALLBACK + ":" + postId)
@@ -226,9 +222,7 @@ public class PostService {
         log.info("+++++ IN PostService :: sendPostNewExecutor :: ID - {} :: START", postId);
         var post = postRepository.getById(postId);
         var employeeList = post.getToDepartment().getEmployees();
-
         var sendMsg = postTxtTemplate(post);
-
         for (Employee employee : employeeList) {
             messageService.sendMessageToDepartment(employee.getId(), sendMsg);
         }
@@ -241,9 +235,7 @@ public class PostService {
         log.info("+++++ IN PostService :: sendPhotoPostNewExecutor :: ID - {} :: START", postId);
         var post = postRepository.getById(postId);
         var employeeList = post.getToDepartment().getEmployees();
-
         var sendMsg = postTxtTemplate(post);
-
         for (Employee employee : employeeList) {
             messageService.sendPhotoMessageToDepartment(employee.getId(), sendMsg, post.getFileId());
         }
@@ -256,9 +248,7 @@ public class PostService {
         log.info("+++++ IN PostService :: sendDocPostNewExecutor :: ID - {} :: START", postId);
         var post = postRepository.getById(postId);
         var employeeList = post.getToDepartment().getEmployees();
-
         var sendMsg = postTxtTemplate(post);
-
         for (Employee employee : employeeList) {
             messageService.sendDocMessageToDepartment(employee.getId(), sendMsg, post.getFileId());
         }
@@ -267,15 +257,23 @@ public class PostService {
         return true;
     }
 
-    public void taskListDepartmentToday(Message message, Long departmentId) {
-        var posts = postRepository.findAllToDayPostByDepartmentId(departmentId);
+    public void taskListDepartment(Message message, long departmentId, int interval) {
+        var posts = postRepository.findAllPostByDepartmentId(departmentId, interval);
         System.out.println(" ================================== SIZE2 - " + posts.size());  // TODO: delete
+
+        var dateMinusInterval = Instant.now().minus(Duration.ofDays(interval));
+        var date = new SimpleDateFormat("dd/MM/yyyy").format(Timestamp.from(dateMinusInterval));
+
         if (posts.isEmpty()) {
-            messageService.sendEditMessage(message, SEND_MSG_TODAY_EMPTY_TASKS);
+            var inlineKeyboardMarkup = getInlineKeyboardMarkup(departmentId);
+            var msgTxt = String.format("%s: %s",SEND_MSG_EMPTY_TASKS, date);
+            messageService.sendEditInlineKeyboardMarkup(message, msgTxt, inlineKeyboardMarkup);
             return;
         }
+
+        var departmentName = posts.get(0).getToDepartment().getName();
         var sendMsg = new StringBuilder();
-        sendMsg.append(SEND_MSG_TODAY_TASKS);
+        sendMsg.append(String.format("%s: %s \\- %s\n", SEND_MSG_TASKS, date, departmentName));
         for (Post post : posts) {
             sendMsg.append(String.format("\n\uD83D\uDCE9 *№ %d* \uD83D\uDCE9\n", post.getId()));
             sendMsg.append(String.format("_От:_ *%s \\(%s\\)* ", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
@@ -285,6 +283,29 @@ public class PostService {
                 sendMsg.append(String.format("\n_Исполнитель:_ *%s \\(%s\\)*", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
             sendMsg.append(String.format("\n\uD83D\uDCAC_Тема:_ `%s`\n", post.getTextMsg()));
         }
-        messageService.sendEditMessage(message, sendMsg.toString());
+        var inlineKeyboardMarkup = getInlineKeyboardMarkup(departmentId);
+        messageService.sendEditInlineKeyboardMarkup(message, sendMsg.toString(), inlineKeyboardMarkup);
     }
+
+    private InlineKeyboardMarkup getInlineKeyboardMarkup(Long departmentId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(List.of(
+                InlineKeyboardButton.builder()
+                        .text("Вчера")
+                        .callbackData(BTN_TASK_LIST_YESTERDAY_CALLBACK + ":" + departmentId)
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("2 дня назад")
+                        .callbackData(BTN_TASK_LIST_2DAYS_CALLBACK + ":" + departmentId)
+                        .build(),
+                InlineKeyboardButton.builder()
+                        .text("3 дня назад")
+                        .callbackData(BTN_TASK_LIST_3DAYS_CALLBACK + ":" + departmentId)
+                        .build()
+        ));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
+    }
+
 }

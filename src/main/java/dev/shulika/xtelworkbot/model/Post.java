@@ -21,7 +21,6 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "from_employee_id")
     private Employee fromEmployee;
@@ -32,15 +31,11 @@ public class Post {
     @JoinColumn(name = "accepted_employee_id")
     private Employee taskExecutor;
     private String textMsg;
-
-//    @Temporal(TemporalType.DATE)
-//    @CreationTimestamp
-//    private Date createdAt;
-
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
-    private Timestamp updatedAt;
+    private Date updatedAt;
     private String fileId;
 }
