@@ -32,8 +32,8 @@ public class PostService {
     private final MessageService messageService;
     private final EmployeeRepository employeeRepository;
 
-    public Long createPost(Message message) {
-        log.info("+++++ IN PostService :: createPost :: ChatId - {} :: START +++++", message.getChatId());
+    public Long createTxtPost(Message message) {
+        log.info("+++++ IN PostService :: createTxtPost :: ChatId - {} :: START +++++", message.getChatId());
         var appUser = appUserRepository.findById(message.getChatId()).
                 orElseThrow(() -> new NotFoundException("----- User Not found-----"));
         var newPost = Post.builder()
@@ -48,7 +48,7 @@ public class PostService {
                 .textMsg(message.getText())
                 .build();
         var savedPost = postRepository.save(newPost);
-        log.info("+++++ IN PostService :: createPost :: ChatId - {} IdPost - {}:: COMPLETE +++++",
+        log.info("+++++ IN PostService :: createTxtPost :: ChatId - {} IdPost - {}:: COMPLETE +++++",
                 message.getChatId(), savedPost.getId());
         return savedPost.getId();
     }
@@ -120,6 +120,124 @@ public class PostService {
             messageService.sendMessageToDepartment(employee.getId(), sendMsg.toString());
         }
         log.info("+++++ IN PostService :: sendPostNewExecutor :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
+                postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+        return true;
+    }
+
+    public Long createPhotoPost(Message message) {
+        log.info("+++++ IN PostService :: createPhotoPost :: ChatId - {} :: START +++++", message.getChatId());
+        var appUser = appUserRepository.findById(message.getChatId()).
+                orElseThrow(() -> new NotFoundException("----- User Not found-----"));
+        var newPost = Post.builder()
+                .fromEmployee(Employee.builder()
+                        .id(message.getChatId())
+                        .build()
+                )
+                .toDepartment(Department.builder()
+                        .id(appUser.getSendTo())
+                        .build()
+                )
+                .textMsg(message.getCaption())
+                .fileId(message.getPhoto().get(0).getFileId())
+                .build();
+        var savedPost = postRepository.save(newPost);
+        log.info("+++++ IN PostService :: createPhotoPost :: ChatId - {} IdPost - {} :: COMPLETE +++++",
+                message.getChatId(), savedPost.getId());
+        return savedPost.getId();
+    }
+
+    public boolean sendPhotoPost(Long postId) {
+        log.info("+++++ IN PostService :: sendPhotoPost :: ID - {} :: START", postId);
+        var post = postRepository.getById(postId);
+        var employeeList = post.getToDepartment().getEmployees();
+        if (employeeList.isEmpty()) {
+            log.error("----- IN PostService :: sendPhotoPost FAIL - Employees is Empty :: PostId - {}", postId);
+            return false;
+        }
+        var sendMsg = new StringBuilder();
+        sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление № __%d__* \uD83D\uDCE9", postId));
+        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+        sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+        sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
+        sendMsg.append("\n\n _\\*текст темы можно скопировать нажав на него_");
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(Collections.singletonList(
+//                InlineKeyboardButton.builder()
+//                        .text(BTN_CANCEL_TASK)
+//                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
+//                        .build(),
+                InlineKeyboardButton.builder()
+                        .text(BTN_ACCEPT_TASK)
+                        .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
+                        .build()
+        ));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+
+        for (Employee employee : employeeList) {
+            messageService.sendPhotoMessageToDepartment(employee.getId(), sendMsg.toString(), inlineKeyboardMarkup, post.getFileId());
+        }
+        log.info("+++++ IN PostService :: sendPhotoPost :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
+                postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
+        return true;
+    }
+
+    public Long createDocPost(Message message) {
+        log.info("+++++ IN PostService :: createDocPost :: ChatId - {} :: START +++++", message.getChatId());
+        var appUser = appUserRepository.findById(message.getChatId()).
+                orElseThrow(() -> new NotFoundException("----- User Not found-----"));
+        var newPost = Post.builder()
+                .fromEmployee(Employee.builder()
+                        .id(message.getChatId())
+                        .build()
+                )
+                .toDepartment(Department.builder()
+                        .id(appUser.getSendTo())
+                        .build()
+                )
+                .textMsg(message.getCaption())
+                .fileId(message.getDocument().getFileId())
+                .build();
+        var savedPost = postRepository.save(newPost);
+        log.info("+++++ IN PostService :: createDocPost :: ChatId - {} IdPost - {} :: COMPLETE +++++",
+                message.getChatId(), savedPost.getId());
+        return savedPost.getId();
+    }
+
+    public boolean sendDocPost(Long postId) {
+        log.info("+++++ IN PostService :: sendDocPost :: ID - {} :: START", postId);
+        var post = postRepository.getById(postId);
+        var employeeList = post.getToDepartment().getEmployees();
+        if (employeeList.isEmpty()) {
+            log.error("----- IN PostService :: sendDocPost FAIL - Employees is Empty :: PostId - {}", postId);
+            return false;
+        }
+        var sendMsg = new StringBuilder();
+        sendMsg.append(String.format("\uD83D\uDCE9 *Новое уведомление № __%d__* \uD83D\uDCE9", postId));
+        sendMsg.append(String.format("\n\n_От:_ *%s \\(%s\\)*", post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName()));
+        sendMsg.append(String.format("\n_Кому:_ *%s*", post.getToDepartment().getName()));
+        sendMsg.append(String.format("\n\n\uD83D\uDCAC_Тема:_ `%s`", post.getTextMsg()));
+        sendMsg.append("\n\n _\\*текст темы можно скопировать нажав на него_");
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        keyboard.add(Collections.singletonList(
+//                InlineKeyboardButton.builder()
+//                        .text(BTN_CANCEL_TASK)
+//                        .callbackData(BTN_CANCEL_TASK_CALLBACK + ":" + postId)
+//                        .build(),
+                InlineKeyboardButton.builder()
+                        .text(BTN_ACCEPT_TASK)
+                        .callbackData(BTN_ACCEPT_TASK_CALLBACK + ":" + postId)
+                        .build()
+        ));
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+
+        for (Employee employee : employeeList) {
+            messageService.sendDocMessageToDepartment(employee.getId(), sendMsg.toString(), inlineKeyboardMarkup, post.getFileId());
+        }
+        log.info("+++++ IN PostService :: sendDocPost :: ID - {}, EmployeeFullName - {}, SendToDepartment - {}, TextMsg - {} :: COMPLETE",
                 postId, post.getFromEmployee().getFullName(), post.getToDepartment().getName(), post.getTextMsg());
         return true;
     }

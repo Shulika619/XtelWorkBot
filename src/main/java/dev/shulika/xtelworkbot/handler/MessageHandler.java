@@ -65,12 +65,24 @@ public class MessageHandler {
 
     private void processPhotoMessage(Update update) {
         log.info("+++++ IN MessageHandler :: processPhotoMessage :: PHOTO :: Caption - {}", update.getMessage().getCaption());
+        var message = update.getMessage();
+        var user = appUserService.findUserById(message.getChatId());
+
+        if (user.getState().equals(State.SEND_MSG)) {
+            log.info("+++++ IN MessageHandler :: SEND_MSG = PHOTO +++++");
+            sendHandler.sendMsgPhotoStep3(message);
+        }
         // TODO: if change Photo+Caption -> error
-//        System.out.println(update.getMessage().getCaption());
     }
 
     private void processDocMessage(Update update) {
         log.info("+++++ IN MessageHandler; :: processDocMessage :: DOC");
-//        updateProducer.produce(DOC_MESSAGE_UPDATE, update);
+        var message = update.getMessage();
+        var user = appUserService.findUserById(message.getChatId());
+
+        if (user.getState().equals(State.SEND_MSG)) {
+            log.info("+++++ IN MessageHandler :: SEND_MSG = DOC +++++");
+            sendHandler.sendMsgDocStep3(message);
+        }
     }
 }

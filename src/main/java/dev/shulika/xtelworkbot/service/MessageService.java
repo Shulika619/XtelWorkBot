@@ -5,9 +5,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Document;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -20,24 +24,6 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @Slf4j
 public class MessageService {
     private final TgBot tgBot;
-
-    public void sendMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
-        var sendMsg = SendMessage.builder()
-                .text(sendText)
-                .chatId(chatId)
-                .parseMode(ParseMode.MARKDOWNV2)
-                .build();
-        sendMsg.setReplyMarkup(inlineKeyboardMarkup);
-        executeSendMsg(sendMsg);
-    }
-    public void sendMessageToDepartment(Long chatId, String sendText) {
-        var sendMsg = SendMessage.builder()
-                .text(sendText)
-                .chatId(chatId)
-                .parseMode(ParseMode.MARKDOWNV2)
-                .build();
-        executeSendMsg(sendMsg);
-    }
 
     public void sendMessage(Message message, String sendText) {
         var sendMsg = SendMessage.builder()
@@ -77,6 +63,45 @@ public class MessageService {
                 .build();
         sendEditMsg.setReplyMarkup(inlineKeyboardMarkup);
         executeEditMsg(sendEditMsg);
+    }
+
+    public void sendMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
+        var sendMsg = SendMessage.builder()
+                .text(sendText)
+                .chatId(chatId)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        sendMsg.setReplyMarkup(inlineKeyboardMarkup);
+        executeSendMsg(sendMsg);
+    }
+    public void sendMessageToDepartment(Long chatId, String sendText) {
+        var sendMsg = SendMessage.builder()
+                .text(sendText)
+                .chatId(chatId)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        executeSendMsg(sendMsg);
+    }
+
+    public void sendPhotoMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup, String fileId) {
+        var sendPhotoMsg = SendPhoto.builder()
+                .chatId(chatId)
+                .caption(sendText)
+                .photo(new InputFile(fileId))
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        sendPhotoMsg.setReplyMarkup(inlineKeyboardMarkup);
+        executeSendPhotoMsg(sendPhotoMsg);
+    }
+    public void sendDocMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup, String fileId) {
+        var sendDocMsg = SendDocument.builder()
+                .chatId(chatId)
+                .caption(sendText)
+                .document(new InputFile(fileId))
+                .parseMode(ParseMode.MARKDOWNV2)
+                .build();
+        sendDocMsg.setReplyMarkup(inlineKeyboardMarkup);
+        executeSendDocMsg(sendDocMsg);
     }
 
     public void deleteMsg(Message message) {
@@ -129,6 +154,26 @@ public class MessageService {
             log.error("----- IN MessageService :: executeDeleteMsg FAIL :: message - {}", e.getMessage());
         }
     }
+
+    private void executeSendPhotoMsg(SendPhoto sendPhoto) {
+        try {
+            tgBot.execute(sendPhoto);
+            log.info("+++++ IN MessageService :: executeSendPhotoMsg executed :: chatId - {} :: text - {}",
+                    sendPhoto.getChatId(), sendPhoto.getCaption());
+        } catch (TelegramApiException e) {
+            log.error("----- IN MessageService :: executeSendPhotoMsg execute FAIL :: message - {}", e.getMessage());
+        }
+    }
+    private void executeSendDocMsg(SendDocument sendDocument) {
+        try {
+            tgBot.execute(sendDocument);
+            log.info("+++++ IN MessageService :: executeSendDocMsg executed :: chatId - {} :: text - {}",
+                    sendDocument.getChatId(), sendDocument.getCaption());
+        } catch (TelegramApiException e) {
+            log.error("----- IN MessageService :: executeSendDocMsg execute FAIL :: message - {}", e.getMessage());
+        }
+    }
+
 //    public void test1(Message message) {
 //        var sendMessage = SendMessage.builder()
 //                .text("<b>Bold</b> " +

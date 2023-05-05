@@ -26,14 +26,13 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "to_department_id")
     private Department toDepartment;
-
     @ManyToOne
     @JoinColumn(name = "accepted_employee_id")
     private Employee taskExecutor;
-
     private String textMsg;
     @CreationTimestamp
     private Timestamp createdAt;
     @UpdateTimestamp
     private Timestamp updatedAt;
+    private String fileId;
 }
