@@ -10,20 +10,27 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static dev.shulika.xtelworkbot.BotConst.*;
+import static dev.shulika.xtelworkbot.BotConst.BTN_CANCEL;
+import static dev.shulika.xtelworkbot.BotConst.BTN_CANCEL_CALLBACK;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MessageService {
     private final TgBot tgBot;
+
+    public InlineKeyboardButton createCancelButton() {
+        return InlineKeyboardButton.builder()
+                .text(BTN_CANCEL)
+                .callbackData(BTN_CANCEL_CALLBACK + ":" + null)
+                .build();
+    }
 
     public void sendMessage(Message message, String sendText) {
         var sendMsg = SendMessage.builder()
@@ -74,6 +81,7 @@ public class MessageService {
         sendMsg.setReplyMarkup(inlineKeyboardMarkup);
         executeSendMsg(sendMsg);
     }
+
     public void sendMessageToDepartment(Long chatId, String sendText) {
         var sendMsg = SendMessage.builder()
                 .text(sendText)
@@ -93,6 +101,7 @@ public class MessageService {
         sendPhotoMsg.setReplyMarkup(inlineKeyboardMarkup);
         executeSendPhotoMsg(sendPhotoMsg);
     }
+
     public void sendDocMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup, String fileId) {
         var sendDocMsg = SendDocument.builder()
                 .chatId(chatId)
@@ -110,19 +119,6 @@ public class MessageService {
         delMsg.setMessageId(message.getMessageId());
         executeDeleteMsg(delMsg);
     }
-
-    public InlineKeyboardButton createCancelButton() {
-        return InlineKeyboardButton.builder()
-                .text(BTN_CANCEL)
-                .callbackData(BTN_CANCEL_CALLBACK + ":" + null)
-                .build();
-    }
-
-    public void processed(Message message) {
-        // TODO: remove if dont need
-        sendMessage(message, PROCESSED_MSG);
-    }
-
 
     // TODO: refactoring all execute methods
     private void executeSendMsg(SendMessage sendMessage) {
@@ -164,6 +160,7 @@ public class MessageService {
             log.error("----- IN MessageService :: executeSendPhotoMsg execute FAIL :: message - {}", e.getMessage());
         }
     }
+
     private void executeSendDocMsg(SendDocument sendDocument) {
         try {
             tgBot.execute(sendDocument);
@@ -173,6 +170,12 @@ public class MessageService {
             log.error("----- IN MessageService :: executeSendDocMsg execute FAIL :: message - {}", e.getMessage());
         }
     }
+
+//    public void processed(Message message) {
+//        // TODO: remove if dont need
+//        sendMessage(message, PROCESSED_MSG);
+//    }
+
 
 //    public void test1(Message message) {
 //        var sendMessage = SendMessage.builder()

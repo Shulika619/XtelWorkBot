@@ -69,7 +69,7 @@ public class SendHandler {
         log.info("+++++ IN SendHandler :: sendMsgTextStep3 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var postId = postService.createTxtPost(message);
-        if (postService.sendPost(postId)) {
+        if (postService.sendTxtPost(postId)) {
             messageService.sendMessage(message, SEND_MSG_COMPLETE);
         } else {
             messageService.sendMessage(message, SEND_MSG_EMPTY_DEPARTMENT);
@@ -77,7 +77,31 @@ public class SendHandler {
         appUserService.changeState(message, State.NONE);
     }
 
-//    public void changeSendMsgStatusCancel(Message message, String value) {
+    public void sendMsgPhotoStep3(Message message) {
+        log.info("+++++ IN SendHandler :: sendMsgPhotoStep3 NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        var postId = postService.createPhotoPost(message);
+        if (postService.sendPhotoPost(postId)) {
+            messageService.sendMessage(message, SEND_MSG_COMPLETE);
+        } else {
+            messageService.sendMessage(message, SEND_MSG_EMPTY_DEPARTMENT);
+        }
+        appUserService.changeState(message, State.NONE);
+    }
+
+    public void sendMsgDocStep3(Message message) {
+        log.info("+++++ IN SendHandler :: sendMsgDocStep3 NOW :: ChatId - {}, FirstName - {}",
+                message.getChatId(), message.getChat().getFirstName());
+        var postId = postService.createDocPost(message);
+        if (postService.sendDocPost(postId)) {
+            messageService.sendMessage(message, SEND_MSG_COMPLETE);
+        } else {
+            messageService.sendMessage(message, SEND_MSG_EMPTY_DEPARTMENT);
+        }
+        appUserService.changeState(message, State.NONE);
+    }
+
+    //    public void changeSendMsgStatusCancel(Message message, String value) {
 //        log.info("+++++ IN SendHandler :: changeSendMsgStatusCancel NOW :: Post - {}, ChatId - {}, FirstName - {}",
 //                value, message.getChatId(), message.getChat().getFirstName());
 //        System.out.println("+++++ ChatId - " + message.getMessageId());
@@ -94,28 +118,5 @@ public class SendHandler {
         } else {
             messageService.sendEditMessage(message, SEND_MSG_CHANGED_EXECUTOR_FAIL);
         }
-    }
-
-    public void sendMsgPhotoStep3(Message message) {
-        log.info("+++++ IN SendHandler :: sendMsgPhotoStep3 NOW :: ChatId - {}, FirstName - {}",
-                message.getChatId(), message.getChat().getFirstName());
-        var postId = postService.createPhotoPost(message);
-        if (postService.sendPhotoPost(postId)) {
-            messageService.sendMessage(message, SEND_MSG_COMPLETE);
-        } else {
-            messageService.sendMessage(message, SEND_MSG_EMPTY_DEPARTMENT);
-        }
-        appUserService.changeState(message, State.NONE);
-    }
-    public void sendMsgDocStep3(Message message) {
-        log.info("+++++ IN SendHandler :: sendMsgDocStep3 NOW :: ChatId - {}, FirstName - {}",
-                message.getChatId(), message.getChat().getFirstName());
-        var postId = postService.createDocPost(message);
-        if (postService.sendDocPost(postId)) {
-            messageService.sendMessage(message, SEND_MSG_COMPLETE);
-        } else {
-            messageService.sendMessage(message, SEND_MSG_EMPTY_DEPARTMENT);
-        }
-        appUserService.changeState(message, State.NONE);
     }
 }
