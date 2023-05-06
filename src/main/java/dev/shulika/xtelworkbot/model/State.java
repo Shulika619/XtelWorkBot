@@ -12,6 +12,5 @@ public enum State {
     CHECK_SELECT_DEPARTMENT,
     DEPARTMENT_PASS,
     CHECK_DEPARTMENT_PASS,
-    // TODO: other state for Send MSG All
     SEND_MSG,
 }

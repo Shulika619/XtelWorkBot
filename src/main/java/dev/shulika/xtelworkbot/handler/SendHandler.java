@@ -35,7 +35,7 @@ public class SendHandler {
         }
         log.info("+++++ IN SendHandler :: selectDepartmentStep1 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
-        var departments = departmentService.findALL();
+        var departments = departmentService.findAll();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         for (Department department : departments) {
@@ -50,7 +50,6 @@ public class SendHandler {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         messageService.sendInlineKeyboardMarkup(
                 message, REG_MSG_SELECT_DEPARTMENT, inlineKeyboardMarkup);
-//        appUserService.changeState(message, State.CHECK_SELECT_DEPARTMENT);
     }
 
     public void checkSelectDepartmentStep2(Message message, String value) {

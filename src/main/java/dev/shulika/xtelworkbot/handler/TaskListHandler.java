@@ -20,7 +20,6 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @Slf4j
 public class TaskListHandler {
     private final MessageService messageService;
-    private final AppUserService appUserService;
     private final EmployeeService employeeService;
     private final DepartmentService departmentService;
     private final PostService postService;
@@ -34,7 +33,7 @@ public class TaskListHandler {
         }
         log.info("+++++ IN TaskListHandler :: selectDepartmentStep1 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
-        var departments = departmentService.findALL();
+        var departments = departmentService.findAll();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         for (Department department : departments) {
@@ -55,27 +54,27 @@ public class TaskListHandler {
         log.info("+++++ IN TaskListHandler :: checkSelectDepartmentStep2 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departmentId = Long.valueOf(value);
-        postService.taskListDepartment(message, departmentId, 0);
+        postService.taskListDepartment(message, departmentId, -1);
     }
 
     public void showYesterdayTasks(Message message, String value) {
         log.info("+++++ IN TaskListHandler :: showYesterdayTasks NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departmentId = Long.valueOf(value);
-        postService.taskListDepartment(message, departmentId, 1);
+        postService.taskListDepartment(message, departmentId, 0);
     }
 
     public void show2DaysTasks(Message message, String value) {
         log.info("+++++ IN TaskListHandler :: show2DaysTasks NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departmentId = Long.valueOf(value);
-        postService.taskListDepartment(message, departmentId, 2);
+        postService.taskListDepartment(message, departmentId, 1);
     }
 
     public void show3DaysTasks(Message message, String value) {
         log.info("+++++ IN TaskListHandler :: show2DaysTasks NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departmentId = Long.valueOf(value);
-        postService.taskListDepartment(message, departmentId, 3);
+        postService.taskListDepartment(message, departmentId, 2);
     }
 }

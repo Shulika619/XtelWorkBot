@@ -74,7 +74,6 @@ public class MessageHandler {
             log.info("+++++ IN MessageHandler :: SEND_MSG = PHOTO +++++");
             sendHandler.sendMsgPhotoStep3(message);
         }
-        // TODO: if change Photo+Caption -> error
     }
 
     private void processDocMessage(Update update) {

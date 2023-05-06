@@ -17,9 +17,9 @@ import java.util.Optional;
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
 
-    // TODO: when add Department from TelegramBot
+    // TODO: add Department from TelegramBot
 
-   public List<Department> findALL() {
+   public List<Department> findAll() {
         log.info("+++++ IN DepartmentService :: findALL +++++");
         return departmentRepository.findAll();
     }

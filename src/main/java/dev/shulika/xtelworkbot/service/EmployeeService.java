@@ -7,7 +7,6 @@ import dev.shulika.xtelworkbot.model.Employee;
 import dev.shulika.xtelworkbot.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -51,7 +50,7 @@ public class EmployeeService {
         log.info("+++++ IN EmployeeService :: editEmployee :: ChatId = {}, FullName - {} :: START",
                 appUser.getId(), appUser.getFullName());
         employee.setDepartment(Department.builder()
-                .id( appUser.getDepartmentId()).build());
+                .id(appUser.getDepartmentId()).build());
         employee.setFullName(appUser.getFullName());
         employee.setTgFirstName(appUser.getTgFirstName());
         employee.setRole(appUser.getRole());
@@ -59,7 +58,7 @@ public class EmployeeService {
                 appUser.getId(), appUser.getFullName());
     }
 
-    public boolean existById(Long employeeId){
+    public boolean existById(Long employeeId) {
         return employeeRepository.existsById(employeeId);
     }
 

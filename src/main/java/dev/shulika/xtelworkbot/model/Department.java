@@ -1,7 +1,9 @@
 package dev.shulika.xtelworkbot.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,8 +20,7 @@ public class Department {
     private Long id;
     private String name;
     private String password;
-
-    @OneToMany(mappedBy="department")
+    @OneToMany(mappedBy = "department")
     private List<Employee> employees;
 
 //    @OneToMany(mappedBy="sendToDepartment")

@@ -48,6 +48,7 @@ public class AppUserService {
         messageService.sendEditMessage(message, MSG_CANCEL);
         changeState(message, State.CANCEL);
     }
+
     public void cancelCommand(Message message) {
         log.info("----- IN AppUserService :: cancelCommand :: ChatId - {}, FirstName - {} -----",
                 message.getChatId(), message.getChat().getFirstName());
@@ -85,7 +86,7 @@ public class AppUserService {
                 message.getChatId(), message.getChat().getFirstName(), idDepartment);
     }
 
-    private void setRole(AppUser appUser, Role role){
+    private void setRole(AppUser appUser, Role role) {
         log.info("+++++ IN AppUserService :: setRole :: ChatId - {}, Role - {}:: START +++++", appUser.getId(), role);
         appUser.setRole(role);
     }
@@ -97,11 +98,11 @@ public class AppUserService {
         var selectedDepartmentId = user.getDepartmentId();
         var department = departmentRepository.findById(selectedDepartmentId)
                 .orElseThrow(() -> new NotFoundException("----- Department Not found-----"));
-        if (department.getName().equals(Role.BOSS.toString())){
-            setRole(user,Role.BOSS);
+        if (department.getName().equals(Role.BOSS.toString())) {
+            setRole(user, Role.BOSS);
         } else {
             System.out.println("=================== " + department.getName());
-            setRole(user,Role.USER);
+            setRole(user, Role.USER);
         }
         return department.getPassword().equals(message.getText());
     }
@@ -114,7 +115,7 @@ public class AppUserService {
         employeeService.saveFromAppUser(user);
     }
 
-    public  void setSendTo(Message message, Long departmentId){
+    public void setSendTo(Message message, Long departmentId) {
         log.info("+++++ IN AppUserService :: setSendTo :: ChatId - {}, FirstName - {}, departmentId - {} ",
                 message.getChatId(), message.getChat().getFirstName(), departmentId);
         var user = appUserRepository.findById(message.getChatId())

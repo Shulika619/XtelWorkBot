@@ -115,7 +115,7 @@ public class RegistrationHandler {
     private void selectDepartmentStep5(Message message) {
         log.info("+++++ IN RegistrationHandler :: selectDepartmentStep5 NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
-        var departments = departmentService.findALL();
+        var departments = departmentService.findAll();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         for (Department department : departments) {
@@ -161,7 +161,7 @@ public class RegistrationHandler {
         }
     }
 
-    // TODO: select ROLE
+    // TODO: select ROLE if need late
 
     private void finishRegistration(Message message) {
         log.info("+++++ IN RegistrationHandler :: finishRegistration NOW :: ChatId - {}, FirstName - {}",

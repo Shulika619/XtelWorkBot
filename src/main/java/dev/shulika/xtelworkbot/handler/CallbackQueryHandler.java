@@ -14,7 +14,6 @@ import static dev.shulika.xtelworkbot.BotConst.*;
 @RequiredArgsConstructor
 @Slf4j
 public class CallbackQueryHandler {
-    private final MessageService messageService;
     private final RegistrationHandler registrationHandler;
     private final AppUserService appUserService;
     private final SendHandler sendHandler;

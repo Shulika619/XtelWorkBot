@@ -35,7 +35,6 @@ public class PostService {
     private final MessageService messageService;
     private final EmployeeRepository employeeRepository;
 
-
     private String postTxtTemplate(Post post) {
         var sendMsg = new StringBuilder();
         if (post.getTaskExecutor() == null) {
@@ -259,25 +258,21 @@ public class PostService {
 
     public void taskListDepartment(Message message, long departmentId, int interval) {
         var posts = postRepository.findAllPostByDepartmentId(departmentId, interval);
-        System.out.println(" ================================== SIZE2 - " + posts.size());  // TODO: delete
-
         var dateMinusInterval = Instant.now().minus(Duration.ofDays(interval));
         var date = new SimpleDateFormat("dd/MM/yyyy").format(Timestamp.from(dateMinusInterval));
-
         if (posts.isEmpty()) {
             var inlineKeyboardMarkup = getInlineKeyboardMarkup(departmentId);
-            var msgTxt = String.format("%s: %s",SEND_MSG_EMPTY_TASKS, date);
+            var msgTxt = String.format("%s: %s", SEND_MSG_EMPTY_TASKS, date);
             messageService.sendEditInlineKeyboardMarkup(message, msgTxt, inlineKeyboardMarkup);
             return;
         }
-
         var departmentName = posts.get(0).getToDepartment().getName();
         var sendMsg = new StringBuilder();
         sendMsg.append(String.format("%s: %s \\- `%s`\n", SEND_MSG_TASKS, date, departmentName));
         for (Post post : posts) {
             sendMsg.append(String.format("\n\uD83D\uDCE9 *№ %d* \uD83D\uDCE9\n", post.getId()));
             sendMsg.append(String.format("_От:_ `%s (%s) - %s`",
-                    post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName(),post.getFromEmployee().getDepartment().getName()));
+                    post.getFromEmployee().getFullName(), post.getFromEmployee().getTgFirstName(), post.getFromEmployee().getDepartment().getName()));
             sendMsg.append(String.format("\n_Кому:_ `%s`", post.getToDepartment().getName()));
             if (post.getTaskExecutor() != null)
                 sendMsg.append(String.format("\n_Исполнитель:_ `%s (%s)`", post.getTaskExecutor().getFullName(), post.getTaskExecutor().getTgFirstName()));
@@ -307,5 +302,4 @@ public class PostService {
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }
-
 }
