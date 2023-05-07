@@ -21,6 +21,7 @@ public class MessageHandler {
     private final EmployeeService employeeService;
     private final SendHandler sendHandler;
     private final TaskListHandler taskListHandler;
+    private final DepartmentHandler departmentHandler;
 
     public void switchMessagesByType(Update update) {
         var message = update.getMessage();
@@ -53,11 +54,15 @@ public class MessageHandler {
                 case COMMAND_REGISTRATION -> registrationHandler.regSwitch(message, State.START_OR_CANCEL_REG);
                 case COMMAND_PROFILE -> employeeService.showEmployeeInfo(message);
                 case COMMAND_HELP -> messageService.sendMessage(message, HELP_MSG);
+                case COMMAND_ADD_DEPARTMENT -> departmentHandler.addDepartmentStartStep1(message);
                 default -> messageService.sendMessage(message, COMMAND_NOT_FOUND);
             }
         } else if (user.getState().equals(State.SEND_MSG)) {
             log.info("+++++ IN MessageHandler :: SEND_MSG = TEXT +++++");
             sendHandler.sendMsgTextStep3(message);
+        } else if (user.getState().equals(State.ADD_DEPARTMENT)) {
+            log.info("+++++ IN MessageHandler :: ADD_DEPARTMENT NOW +++++");
+            departmentHandler.addDepartmentSaveStep2(message);
         } else {
             var state = user.getState();
             log.info("+++++ IN MessageHandler :: STATE - {} NOW +++++", state);
