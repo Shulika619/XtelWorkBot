@@ -111,7 +111,7 @@ public class SendHandler {
                 value, message.getChatId(), message.getChat().getFirstName());
         var postId = Long.parseLong(value);
         var chatId = message.getChatId();
-        if (postService.changeTaskExecutor(postId, chatId)){
+        if (postService.changeTaskExecutor(postId, chatId)) {
             messageService.sendEditMessage(message, SEND_MSG_CHANGED_EXECUTOR);
             postService.sendPostNewExecutor(postId);
         } else {
@@ -124,7 +124,7 @@ public class SendHandler {
                 value, message.getChatId(), message.getChat().getFirstName());
         var postId = Long.parseLong(value);
         var chatId = message.getChatId();
-        if (postService.changeTaskExecutor(postId, chatId)){
+        if (postService.changeTaskExecutor(postId, chatId)) {
             messageService.deleteMsg(message);
             postService.sendPhotoPostNewExecutor(postId);
         } else {
@@ -132,12 +132,13 @@ public class SendHandler {
             messageService.sendMessage(message, SEND_MSG_CHANGED_EXECUTOR_FAIL);
         }
     }
+
     public void changeDocMsgStatusAccept(Message message, String value) {
         log.info("+++++ IN SendHandler :: changeDocMsgStatusAccept NOW :: Post - {}, ChatId - {}, FirstName - {}",
                 value, message.getChatId(), message.getChat().getFirstName());
         var postId = Long.parseLong(value);
         var chatId = message.getChatId();
-        if (postService.changeTaskExecutor(postId, chatId)){
+        if (postService.changeTaskExecutor(postId, chatId)) {
             messageService.deleteMsg(message);
             postService.sendDocPostNewExecutor(postId);
         } else {

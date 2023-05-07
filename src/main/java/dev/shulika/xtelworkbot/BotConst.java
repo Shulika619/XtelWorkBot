@@ -11,6 +11,8 @@ reg - Регистрация сотрудника
 profile - Аккаунт
 help - Помощь
 
+/addDepartment - only admin! (bossPass:nameDepartment:passDepartment)
+1 BOSS pass
 */
 
     // MESSAGES ------------------------------------
@@ -63,6 +65,9 @@ help - Помощь
     public static final String SEND_MSG_CHANGED_EXECUTOR_FAIL = "❗️ *Задачу принял другой сотрудник* ❗️\n";
     public static final String SEND_MSG_EMPTY_TASKS = "️️️️️️️️️️❗️️️️️ *Список заданий для выбранного отдела пуст*";
     public static final String SEND_MSG_TASKS = "📝 *_Список заданий_*";
+    public static final String ADD_DEPARTMENT_MSG = "✍️ *_Добавить отдел_* ✍️\n_commonPass:newName:newPass_";
+    public static final String ADD_DEPARTMENT_MSG_COMPLETE = "✅ *_Отдел успешно добавлен_* ✅";
+    public static final String ADD_DEPARTMENT_MSG_FAIL = "❌ *_Возникла ошибка_* ❌\n _неверный формат данных или пароль_";
 
 
     // COMMANDS ---------------------------------------
@@ -73,6 +78,7 @@ help - Помощь
     public static final String COMMAND_REGISTRATION = "/reg";
     public static final String COMMAND_PROFILE = "/profile";
     public static final String COMMAND_HELP = "/help";
+    public static final String COMMAND_ADD_DEPARTMENT = "/addDepartment";
 
 
     // BUTTONS AND CALLBACK -----------------------------------

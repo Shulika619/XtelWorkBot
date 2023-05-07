@@ -13,4 +13,5 @@ public enum State {
     DEPARTMENT_PASS,
     CHECK_DEPARTMENT_PASS,
     SEND_MSG,
+    ADD_DEPARTMENT
 }
