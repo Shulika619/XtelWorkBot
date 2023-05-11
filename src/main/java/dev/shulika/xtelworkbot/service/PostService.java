@@ -258,7 +258,7 @@ public class PostService {
 
     public void taskListDepartment(Message message, long departmentId, int interval) {
         var posts = postRepository.findAllPostByDepartmentId(departmentId, interval);
-        var dateMinusInterval = Instant.now().minus(Duration.ofDays(interval));
+        var dateMinusInterval = Instant.now().minus(Duration.ofDays(interval+1));
         var date = new SimpleDateFormat("dd/MM/yyyy").format(Timestamp.from(dateMinusInterval));
         if (posts.isEmpty()) {
             var inlineKeyboardMarkup = getInlineKeyboardMarkup(departmentId);
@@ -286,6 +286,10 @@ public class PostService {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(List.of(
+                InlineKeyboardButton.builder()
+                        .text("Сегодня")
+                        .callbackData(BTN_TASK_LIST_TODAY_CALLBACK + ":" + departmentId)
+                        .build(),
                 InlineKeyboardButton.builder()
                         .text("Вчера")
                         .callbackData(BTN_TASK_LIST_YESTERDAY_CALLBACK + ":" + departmentId)

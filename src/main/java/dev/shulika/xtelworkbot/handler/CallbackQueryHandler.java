@@ -2,7 +2,6 @@ package dev.shulika.xtelworkbot.handler;
 
 import dev.shulika.xtelworkbot.model.State;
 import dev.shulika.xtelworkbot.service.AppUserService;
-import dev.shulika.xtelworkbot.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public class CallbackQueryHandler {
             case BTN_ACCEPT_TXT_TASK_CALLBACK -> sendHandler.changeTxtMsgStatusAccept(message, value);
             case BTN_ACCEPT_PHOTO_TASK_CALLBACK -> sendHandler.changePhotoMsgStatusAccept(message, value);
             case BTN_ACCEPT_DOC_TASK_CALLBACK -> sendHandler.changeDocMsgStatusAccept(message, value);
-            case BTN_DEPARTMENT_TASK_LIST_CALLBACK -> taskListHandler.checkSelectDepartmentStep2(message, value);
+            case BTN_TASK_LIST_TODAY_CALLBACK -> taskListHandler.showTodayTasks(message, value);
             case BTN_TASK_LIST_YESTERDAY_CALLBACK -> taskListHandler.showYesterdayTasks(message, value);
             case BTN_TASK_LIST_2DAYS_CALLBACK -> taskListHandler.show2DaysTasks(message, value);
             case BTN_TASK_LIST_3DAYS_CALLBACK -> taskListHandler.show3DaysTasks(message, value);
