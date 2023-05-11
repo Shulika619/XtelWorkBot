@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +57,7 @@ public class RegistrationHandler {
                 messageService.createCancelButton(),
                 InlineKeyboardButton.builder()
                         .text(BTN_START_REG)
-                        .callbackData(BTN_START_REG_CALLBACK +":" + null)
+                        .callbackData(BTN_START_REG_CALLBACK + ":" + null)
                         .build()
         ));
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -166,8 +169,23 @@ public class RegistrationHandler {
     private void finishRegistration(Message message) {
         log.info("+++++ IN RegistrationHandler :: finishRegistration NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
+
+        var keyboardMarkup = new ReplyKeyboardMarkup();
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(KeyboardButton.builder()
+                .text(COMMAND_SEND)
+                .build());
+        row1.add(KeyboardButton.builder()
+                .text(COMMAND_LIST)
+                .build());
+        keyboardRows.add(row1);
+        keyboardMarkup.setKeyboard(keyboardRows);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
+
         appUserService.saveEmployee(message);
-        messageService.sendMessage(message, REG_MSG_REG_COMPLETE);
+        messageService.sendReplyKeyboardMarkup(message, REG_MSG_REG_COMPLETE, keyboardMarkup);
         appUserService.changeState(message, State.NONE);
     }
 }

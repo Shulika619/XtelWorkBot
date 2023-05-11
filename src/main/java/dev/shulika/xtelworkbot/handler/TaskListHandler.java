@@ -40,7 +40,7 @@ public class TaskListHandler {
             keyboard.add(List.of(
                     InlineKeyboardButton.builder()
                             .text(department.getName())
-                            .callbackData(BTN_DEPARTMENT_TASK_LIST_CALLBACK + ":" + department.getId())
+                            .callbackData(BTN_TASK_LIST_TODAY_CALLBACK + ":" + department.getId())
                             .build()
             ));
         }
@@ -50,8 +50,8 @@ public class TaskListHandler {
                 message, REG_MSG_SELECT_DEPARTMENT, inlineKeyboardMarkup);
     }
 
-    public void checkSelectDepartmentStep2(Message message, String value) {
-        log.info("+++++ IN TaskListHandler :: checkSelectDepartmentStep2 NOW :: ChatId - {}, FirstName - {}",
+    public void showTodayTasks(Message message, String value) {
+        log.info("+++++ IN TaskListHandler :: showTodayTasks NOW :: ChatId - {}, FirstName - {}",
                 message.getChatId(), message.getChat().getFirstName());
         var departmentId = Long.valueOf(value);
         postService.taskListDepartment(message, departmentId, -1);

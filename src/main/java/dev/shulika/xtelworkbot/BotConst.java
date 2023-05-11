@@ -94,7 +94,7 @@ help - Помощь
     public static final String BTN_ACCEPT_TXT_TASK_CALLBACK = "ACCEPT_TXT_TASK";
     public static final String BTN_ACCEPT_PHOTO_TASK_CALLBACK = "ACCEPT_PHOTO_TASK";
     public static final String BTN_ACCEPT_DOC_TASK_CALLBACK = "ACCEPT_DOC_TASK";
-    public static final String BTN_DEPARTMENT_TASK_LIST_CALLBACK = "TASK_LIST_DEPARTMENT";
+    public static final String BTN_TASK_LIST_TODAY_CALLBACK = "TASK_LIST_TODAY";
     public static final String BTN_TASK_LIST_YESTERDAY_CALLBACK = "TASK_LIST_YESTERDAY";
     public static final String BTN_TASK_LIST_2DAYS_CALLBACK = "TASK_LIST_2DAYS";
     public static final String BTN_TASK_LIST_3DAYS_CALLBACK = "TASK_LIST_3DAYS";

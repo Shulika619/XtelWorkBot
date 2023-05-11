@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -70,6 +71,16 @@ public class MessageService {
                 .build();
         sendEditMsg.setReplyMarkup(inlineKeyboardMarkup);
         executeEditMsg(sendEditMsg);
+    }
+
+    public void sendReplyKeyboardMarkup(Message message, String sendText, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        var sendMsg = SendMessage.builder()
+                .text(sendText)
+                .parseMode(ParseMode.MARKDOWNV2)
+                .chatId(message.getChatId())
+                .build();
+        sendMsg.setReplyMarkup(replyKeyboardMarkup);
+        executeSendMsg(sendMsg);
     }
 
     public void sendMessageToDepartment(Long chatId, String sendText, InlineKeyboardMarkup inlineKeyboardMarkup) {
