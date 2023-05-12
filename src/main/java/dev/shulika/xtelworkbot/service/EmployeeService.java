@@ -69,6 +69,7 @@ public class EmployeeService {
             var employee = checkEmployee.get();
             var sendMsg = new StringBuilder();
             sendMsg.append(BotConst.PROFILE_MSG);
+            sendMsg.append(String.format("_ID:_ `%s`\n", employee.getId()));
             sendMsg.append(String.format("_Фамилия Имя:_ `%s`\n", employee.getFullName()));
             sendMsg.append(String.format("_Telegram Имя:_ `%s`\n", employee.getTgFirstName()));
             sendMsg.append(String.format("_Отдел/магазин:_ `%s`\n", employee.getDepartment().getName()));
