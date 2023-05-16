@@ -11,8 +11,8 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-    hibernate:
-      ddl-auto: update
+#    hibernate:
+#      ddl-auto: none
 
 bot:
   name: Xtel_Work_Bot
