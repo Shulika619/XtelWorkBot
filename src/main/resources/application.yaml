@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/xtel_work_tg
+    url: jdbc:postgresql://localhost:5432/xtel_db
     username: postgres
     password: 1234
     initialize: true
@@ -11,8 +11,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-#    hibernate:
-#      ddl-auto: none
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: xtel
 
 bot:
   name: Xtel_Work_Bot
