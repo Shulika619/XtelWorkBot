@@ -98,12 +98,7 @@ public class AppUserService {
         var selectedDepartmentId = user.getDepartmentId();
         var department = departmentRepository.findById(selectedDepartmentId)
                 .orElseThrow(() -> new NotFoundException("----- Department Not found-----"));
-        if (department.getName().equals(Role.BOSS.toString())) {
-            setRole(user, Role.BOSS);
-        } else {
-            System.out.println("=================== " + department.getName());
-            setRole(user, Role.USER);
-        }
+        setRole(user, Role.USER);
         return department.getPassword().equals(message.getText());
     }
 
