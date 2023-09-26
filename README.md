@@ -15,6 +15,10 @@ Telegram bot for company employees.
 - Telegram Bot API
 - Spring Data Jpa
 - PostgreSQL
+- Validation
 - Lombok
 - Maven
 - Git/GitHub
+
+## Video
+[![Watch Video](http://img.youtube.com/vi/f8KjVp5m1xU/0.jpg)](https://youtu.be/f8KjVp5m1xU)
