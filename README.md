@@ -8,7 +8,7 @@ Telegram bot for company employees.
 - View the task list.
 *To access the bot functionality, you need to register (each department has its own access password)
 
-## Technologies were used in the development:
+## Technologies
 - Java 17
 - Spring Boot
 - Spring Web
